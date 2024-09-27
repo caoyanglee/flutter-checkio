@@ -14,12 +14,15 @@ class FluidNavBarButton extends StatefulWidget {
   final bool _selected;
   final FluidNavBarButtonPressedCallback _onPressed;
 
-  FluidNavBarButton(FluidFillIconData iconData, bool selected, FluidNavBarButtonPressedCallback onPressed)
-      : _iconData = iconData, _selected = selected, _onPressed = onPressed;
+  FluidNavBarButton(
+      FluidFillIconData iconData, bool selected, FluidNavBarButtonPressedCallback onPressed)
+      : _iconData = iconData,
+        _selected = selected,
+        _onPressed = onPressed;
 
   @override
   State createState() {
-    return _FluidNavBarButtonState(_iconData, _selected, _onPressed);
+    return _FluidNavBarButtonState(iconData: _iconData, selected: _selected, onPressed: _onPressed);
   }
 }
 
@@ -28,17 +31,17 @@ class _FluidNavBarButtonState extends State<FluidNavBarButton> with SingleTicker
   static const double _defaultOffset = 0;
   static const double _radius = 25;
 
-  FluidFillIconData _iconData;
-  bool _selected;
-  FluidNavBarButtonPressedCallback _onPressed;
+  FluidFillIconData iconData;
+  bool selected;
+  FluidNavBarButtonPressedCallback onPressed;
 
-  AnimationController _animationController;
-  Animation<double> _animation;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
-  _FluidNavBarButtonState(FluidFillIconData iconData, bool selected, FluidNavBarButtonPressedCallback onPressed)
-      : _iconData = iconData,
-      _selected = selected,
-      _onPressed = onPressed;
+  _FluidNavBarButtonState(
+      {required FluidFillIconData this.iconData,
+      required bool this.selected,
+      required FluidNavBarButtonPressedCallback this.onPressed});
 
   @override
   void initState() {
@@ -48,8 +51,7 @@ class _FluidNavBarButtonState extends State<FluidNavBarButton> with SingleTicker
         vsync: this);
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController)
       ..addListener(() {
-        setState(() {
-        });
+        setState(() {});
       });
     _startAnimation();
 
@@ -65,22 +67,21 @@ class _FluidNavBarButtonState extends State<FluidNavBarButton> with SingleTicker
   @override
   Widget build(context) {
     const ne = FluidNavBarButton.nominalExtent;
-    final offsetCurve = _selected ? ElasticOutCurve(0.38) : Curves.easeInQuint;
-    final scaleCurve = _selected ? CenteredElasticOutCurve(0.6) : CenteredElasticInCurve(0.6);
+    final offsetCurve = selected ? ElasticOutCurve(0.38) : Curves.easeInQuint;
+    final scaleCurve = selected ? CenteredElasticOutCurve(0.6) : CenteredElasticInCurve(0.6);
 
     final progress = LinearPointCurve(0.28, 0.0).transform(_animation.value);
 
-    final offset = Tween<double>(
-        begin: _defaultOffset,
-        end: _activeOffset
-        ).transform(offsetCurve.transform(progress));
+    final offset = Tween<double>(begin: _defaultOffset, end: _activeOffset)
+        .transform(offsetCurve.transform(progress));
     final scaleCurveScale = 0.50;
-    final scaleY = 0.5 + scaleCurve.transform(progress) * scaleCurveScale + (0.5 - scaleCurveScale / 2);
+    final scaleY =
+        0.5 + scaleCurve.transform(progress) * scaleCurveScale + (0.5 - scaleCurveScale / 2);
 
     // Create a parameterizable flat button with a fluid fill icon
     return GestureDetector(
       // We wan't to know when this button was tapped, don't bother letting out children know as well
-      onTap: _onPressed,
+      onTap: onPressed,
       behavior: HitTestBehavior.opaque,
       child: Container(
         // Alignment container to the circle
@@ -97,9 +98,9 @@ class _FluidNavBarButtonState extends State<FluidNavBarButton> with SingleTicker
           transform: Matrix4.translationValues(0, -offset, 0),
           // Create a fluid fill icon that get's filled in with a slight delay to the buttons animation
           child: FluidFillIcon(
-              _iconData,
-              LinearPointCurve(0.25, 1.0).transform(_animation.value),
-              scaleY,
+            iconData,
+            LinearPointCurve(0.25, 1.0).transform(_animation.value),
+            scaleY,
           ),
         ),
       ),
@@ -109,19 +110,17 @@ class _FluidNavBarButtonState extends State<FluidNavBarButton> with SingleTicker
   @override
   void didUpdateWidget(oldWidget) {
     setState(() {
-      _selected = widget._selected;
+      selected = widget._selected;
     });
     _startAnimation();
     super.didUpdateWidget(oldWidget);
   }
 
   void _startAnimation() {
-    if (_selected) {
+    if (selected) {
       _animationController.forward();
     } else {
       _animationController.reverse();
     }
   }
-
 }
-

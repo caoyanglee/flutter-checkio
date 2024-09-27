@@ -7,8 +7,8 @@ class EditFiledView extends StatefulWidget {
   final Mutable<String> content;
 
   const EditFiledView({
-    Key key,
-    this.content,
+    Key? key,
+    required this.content,
   }) : super(key: key);
 
   @override
@@ -33,10 +33,8 @@ class _EditFiledViewState extends State<EditFiledView> {
             autoFucus: true,
             initValue: widget.content.value,
             hintText: '记录些什么 ...',
-            hintTextStyle: AppTheme.appTheme
-                .hint(fontWeight: FontWeight.normal, fontSize: 16),
-            textStyle: AppTheme.appTheme
-                .headline1(fontWeight: FontWeight.normal, fontSize: 16),
+            hintTextStyle: AppTheme.appTheme.hint(fontWeight: FontWeight.normal, fontSize: 16),
+            textStyle: AppTheme.appTheme.headline1(fontWeight: FontWeight.normal, fontSize: 16),
             minHeight: 100,
             containerDecoration: BoxDecoration(
                 shape: BoxShape.rectangle,
@@ -47,8 +45,7 @@ class _EditFiledViewState extends State<EditFiledView> {
                 color: AppTheme.appTheme.cardBackgroundColor(),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 boxShadow: AppTheme.appTheme.containerBoxShadow()),
-            numTextStyle: AppTheme.appTheme
-                .themeText(fontWeight: FontWeight.bold, fontSize: 15),
+            numTextStyle: AppTheme.appTheme.themeText(fontWeight: FontWeight.bold, fontSize: 15),
             onValueChanged: (value) {
               widget.content.value = value;
             },

@@ -7,7 +7,6 @@ import 'package:timefly/app_theme.dart';
 import 'package:timefly/blocs/habit/habit_bloc.dart';
 import 'package:timefly/blocs/record_bloc.dart';
 import 'package:timefly/models/habit.dart';
-import 'package:timefly/models/user.dart';
 import 'package:timefly/utils/date_util.dart';
 import 'package:timefly/utils/habit_util.dart';
 import 'package:timefly/utils/pair.dart';
@@ -23,16 +22,20 @@ class HabitCheckView extends StatefulWidget {
   final String habitId;
 
   const HabitCheckView(
-      {Key key, this.habitId, this.start, this.end, this.isFromDetail})
+      {Key? key,
+      required this.habitId,
+      required this.start,
+      required this.end,
+      required this.isFromDetail})
       : super(key: key);
 
   @override
   _HabitCheckViewState createState() => _HabitCheckViewState();
 }
 
-class _HabitCheckViewState extends State<HabitCheckView> {
+class _HabitCheckViewState extends State<HabitCheckView> with SingleTickerProviderStateMixin {
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
-  final SlidableController slidableController = SlidableController();
+  late SlidableController slidableController;
   final ScrollController scrollController = ScrollController();
 
   List<HabitRecord> habitRecords = [];
@@ -40,6 +43,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   @override
   void initState() {
     super.initState();
+    slidableController = SlidableController(this);
   }
 
   @override
@@ -63,8 +67,7 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                       controller: scrollController,
                       initialItemCount: habitRecords.length,
                       itemBuilder: (context, index, animation) {
-                        return getCheckItemView(
-                            context, habitRecords[index], animation);
+                        return getCheckItemView(context, habitRecords[index], animation);
                       },
                     ),
                   ),
@@ -115,12 +118,10 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                   );
 
                   BlocProvider.of<RecordBloc>(context).add(RecordAdd(record));
-                  listKey.currentState.insertItem(0,
-                      duration: const Duration(milliseconds: 500));
+                  listKey.currentState?.insertItem(0, duration: const Duration(milliseconds: 500));
 
                   scrollController.animateTo(0,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.fastOutSlowIn);
+                      duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
                 },
                 backgroundColor: AppTheme.appTheme.grandientColorEnd(),
                 child: SvgPicture.asset(
@@ -138,15 +139,12 @@ class _HabitCheckViewState extends State<HabitCheckView> {
     );
   }
 
-  Widget getCheckItemView(
-      BuildContext context, HabitRecord record, Animation<dynamic> animation) {
+  Widget getCheckItemView(BuildContext context, HabitRecord record, Animation<double> animation) {
     return SizeTransition(
-      sizeFactor:
-          CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+      sizeFactor: CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
       child: TimelineTile(
-        beforeLineStyle: LineStyle(
-            thickness: 2,
-            color: AppTheme.appTheme.normalColor().withOpacity(0.5)),
+        beforeLineStyle:
+            LineStyle(thickness: 2, color: AppTheme.appTheme.normalColor().withOpacity(0.5)),
         indicatorStyle: IndicatorStyle(
           width: 35,
           color: AppTheme.appTheme.containerBackgroundColor(),
@@ -164,44 +162,49 @@ class _HabitCheckViewState extends State<HabitCheckView> {
           position: Tween<Offset>(
             begin: const Offset(1, 0),
             end: Offset(0, 0),
-          ).animate(
-              CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
           child: Padding(
             padding: EdgeInsets.only(top: 10, bottom: 20, left: 28),
             child: Slidable(
               key: GlobalKey(),
               controller: slidableController,
-              actionPane: SlidableDrawerActionPane(),
-              secondaryActions: [
-                GestureDetector(
-                  onTap: () async {
-                    removeItem(context, record);
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
+              startActionPane: ActionPane(
+                // A motion is a widget used to control how the pane animates.
+                motion: const ScrollMotion(),
+
+                // A pane can dismiss the Slidable.
+                dismissible: DismissiblePane(onDismissed: () {}),
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      removeItem(context, record);
+                    },
                     child: Container(
                       alignment: Alignment.center,
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.redAccent.withOpacity(0.35),
-                                offset: const Offset(2, 2.0),
-                                blurRadius: 6.0),
-                          ],
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.red),
-                      child: Icon(
-                        Icons.delete_outline,
-                        color: Colors.white,
-                        size: 30,
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.redAccent.withOpacity(0.35),
+                                  offset: const Offset(2, 2.0),
+                                  blurRadius: 6.0),
+                            ],
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            color: Colors.red),
+                        child: Icon(
+                          Icons.delete_outline,
+                          color: Colors.white,
+                          size: 30,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
               child: Container(
                   decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
@@ -215,16 +218,16 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                         margin: EdgeInsets.only(left: 16, top: 16),
                         child: Text(
                           '${DateUtil.parseHourAndMinAndSecond(record.time)}',
-                          style: AppTheme.appTheme.numHeadline1(
-                              fontWeight: FontWeight.bold, fontSize: 18),
+                          style: AppTheme.appTheme
+                              .numHeadline1(fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       ),
                       Container(
                         margin: EdgeInsets.only(left: 24),
                         child: Text(
                           '${DateUtil.parseYearAndMonthAndDay(record.time)}',
-                          style: AppTheme.appTheme.numHeadline2(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                          style: AppTheme.appTheme
+                              .numHeadline2(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ),
                       GestureDetector(
@@ -233,24 +236,21 @@ class _HabitCheckViewState extends State<HabitCheckView> {
                         },
                         child: Container(
                           padding: EdgeInsets.all(8),
-                          margin: EdgeInsets.only(
-                              left: 16, right: 16, top: 10, bottom: 10),
+                          margin: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
                           decoration: BoxDecoration(
                               shape: BoxShape.rectangle,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                              color:
-                                  AppTheme.appTheme.containerBackgroundColor()),
+                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                              color: AppTheme.appTheme.containerBackgroundColor()),
                           alignment: Alignment.topLeft,
                           width: double.infinity,
                           constraints: BoxConstraints(minHeight: 60),
                           child: Text(
                             '${record.content.length == 0 ? '记录些什么...' : record.content}',
                             style: record.content.length == 0
-                                ? AppTheme.appTheme.headline2(
-                                    fontSize: 16, fontWeight: FontWeight.w500)
-                                : AppTheme.appTheme.headline1(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                ? AppTheme.appTheme
+                                    .headline2(fontSize: 16, fontWeight: FontWeight.w500)
+                                : AppTheme.appTheme
+                                    .headline1(fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                         ),
                       ),
@@ -267,11 +267,10 @@ class _HabitCheckViewState extends State<HabitCheckView> {
   }
 
   void removeItem(BuildContext context, HabitRecord record) async {
-    BlocProvider.of<RecordBloc>(context)
-        .add(RecordDelete(widget.habitId, record.time));
+    BlocProvider.of<RecordBloc>(context).add(RecordDelete(widget.habitId, record.time));
 
     int index = habitRecords.indexOf(record);
-    listKey.currentState.removeItem(
+    listKey.currentState?.removeItem(
         index, (_, animation) => getCheckItemView(_, record, animation),
         duration: const Duration(milliseconds: 500));
   }
@@ -286,21 +285,19 @@ class _HabitCheckViewState extends State<HabitCheckView> {
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          Animation<double> myAnimation = Tween<double>(begin: 0, end: 1.0)
-              .animate(CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.easeOutSine,
-                  reverseCurve: Interval(0, 0.5, curve: Curves.easeInSine)));
+          Animation<double> myAnimation = Tween<double>(begin: 0, end: 1.0).animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutSine,
+              reverseCurve: Interval(0, 0.5, curve: Curves.easeInSine)));
           return Transform(
-            transform:
-                Matrix4.translationValues(0, 100 * (1 - myAnimation.value), 0),
+            transform: Matrix4.translationValues(0, 100 * (1 - myAnimation.value), 0),
             child: FadeTransition(
               opacity: myAnimation,
               child: child,
             ),
           );
         }));
-    BlocProvider.of<RecordBloc>(context).add(RecordUpdate(record.copyWith(
-        habitId: record.habitId, time: record.time, content: content.value)));
+    BlocProvider.of<RecordBloc>(context).add(RecordUpdate(
+        record.copyWith(habitId: record.habitId, time: record.time, content: content.value)));
   }
 }

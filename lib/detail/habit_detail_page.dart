@@ -16,7 +16,7 @@ import 'package:timefly/utils/system_util.dart';
 class HabitDetailPage extends StatefulWidget {
   final String habitId;
 
-  const HabitDetailPage({Key key, this.habitId}) : super(key: key);
+  const HabitDetailPage({Key? key, required this.habitId}) : super(key: key);
 
   @override
   _HabitDetailPageState createState() => _HabitDetailPageState();
@@ -24,8 +24,8 @@ class HabitDetailPage extends StatefulWidget {
 
 class _HabitDetailPageState extends State<HabitDetailPage>
     with SingleTickerProviderStateMixin {
-  ScrollController _controller;
-  AnimationController _animationController;
+  late ScrollController _controller;
+  late AnimationController _animationController;
 
   @override
   void initState() {

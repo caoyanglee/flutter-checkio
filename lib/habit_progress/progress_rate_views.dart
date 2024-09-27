@@ -13,7 +13,7 @@ class ProgressRateView extends StatelessWidget {
   final List<Habit> allHabits;
   final int period;
 
-  const ProgressRateView({Key key, this.allHabits, this.period})
+  const ProgressRateView({Key? key, required this.allHabits, required this.period})
       : super(key: key);
 
   @override

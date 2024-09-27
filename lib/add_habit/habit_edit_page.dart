@@ -1,6 +1,7 @@
 import 'dart:math';
-import 'package:alarm_plugin/alarm_event.dart';
-import 'package:alarm_plugin/alarm_plugin.dart';
+
+// import 'package:alarm_plugin/alarm_event.dart';
+// import 'package:alarm_plugin/alarm_plugin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,12 +25,12 @@ import 'package:timefly/utils/uuid.dart';
 import 'package:timefly/widget/custom_edit_field.dart';
 
 class HabitEditPage extends StatefulWidget {
-  final Habit habit;
+  final Habit? habit;
 
   ///修改，在保存时为 update
   final bool isModify;
 
-  const HabitEditPage({Key key, this.habit, this.isModify}) : super(key: key);
+  const HabitEditPage({Key? key, this.habit, required this.isModify}) : super(key: key);
 
   @override
   _HabitEditPageState createState() => _HabitEditPageState();
@@ -38,9 +39,9 @@ class HabitEditPage extends StatefulWidget {
 class _HabitEditPageState extends State<HabitEditPage>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   ///修改之前的原始数据，在编辑条件下，保存时对比，判断是否需要更新闹钟提醒
-  Habit originHabit;
-  String _habitIcon;
-  Color _habitColor;
+  Habit? originHabit;
+  late String _habitIcon;
+  late Color _habitColor;
 
   List<CompleteTime> completeTimes = [];
   List<CompleteDay> weekCompleteDays = [];
@@ -59,73 +60,66 @@ class _HabitEditPageState extends State<HabitEditPage>
   int countByWeek = 7;
   int countByMonth = 15;
 
-  AnimationController fontAnimationController;
-  AnimationController bottomAnimationController;
+  late AnimationController fontAnimationController;
+  late AnimationController bottomAnimationController;
 
   @override
   void initState() {
     print(widget.habit);
     if (widget.isModify) {
-      originHabit = widget.habit.copyWith();
-      _name = widget.habit.name;
-      _mark = widget.habit.mark;
-      if (widget.habit.period == HabitPeriod.day) {
-        countByDay = widget.habit.doNum;
+      originHabit = widget.habit?.copyWith();
+      _name = widget.habit!.name;
+      _mark = widget.habit!.mark;
+      if (widget.habit!.period == HabitPeriod.day) {
+        countByDay = widget.habit!.doNum;
       }
-      if (widget.habit.period == HabitPeriod.week) {
-        countByWeek = widget.habit.doNum;
+      if (widget.habit!.period == HabitPeriod.week) {
+        countByWeek = widget.habit!.doNum;
       }
-      if (widget.habit.period == HabitPeriod.month) {
-        countByMonth = widget.habit.doNum;
+      if (widget.habit!.period == HabitPeriod.month) {
+        countByMonth = widget.habit!.doNum;
       }
-      if (widget.habit.remindTimes != null &&
-          widget.habit.remindTimes.length > 0) {
-        remindTimes = widget.habit.remindTimes
-            .map((e) => DateUtil.parseHourAndMinWithString(e))
-            .toList();
-        remindTimes.sort(
-            (a, b) => a.millisecondsSinceEpoch - b.millisecondsSinceEpoch);
+      if (widget.habit!.remindTimes != null && widget.habit!.remindTimes.length > 0) {
+        remindTimes =
+            widget.habit!.remindTimes.map((e) => DateUtil.parseHourAndMinWithString(e)).toList();
+        remindTimes.sort((a, b) => a.millisecondsSinceEpoch - b.millisecondsSinceEpoch);
         originRemindTimes = List<DateTime>.from(remindTimes).toList();
       }
     }
 
     List<HabitIcon> icons = HabitIcon.getIcons();
     if (widget.isModify) {
-      _habitIcon = widget.habit.iconPath;
+      _habitIcon = widget.habit!.iconPath;
     } else {
       _habitIcon = icons[Random().nextInt(icons.length - 1)].icon;
     }
 
     List<HabitColor> colors = HabitColor.getBackgroundColors();
     if (widget.isModify) {
-      _habitColor = Color(widget.habit.mainColor);
+      _habitColor = Color(widget.habit!.mainColor);
     } else {
       _habitColor = colors[Random().nextInt(colors.length - 1)].color;
     }
 
-    completeTimes = CompleteTime.getCompleteTimes(
-        widget.isModify ? widget.habit.completeTime : 0);
+    completeTimes = CompleteTime.getCompleteTimes(widget.isModify ? widget.habit!.completeTime : 0);
 
     weekCompleteDays = CompleteDay.getCompleteDays();
-    if (widget.isModify && widget.habit.period == HabitPeriod.week) {
+    if (widget.isModify && widget.habit!.period == HabitPeriod.week) {
       for (int i = 0; i < weekCompleteDays.length; i++) {
-        weekCompleteDays[i].isSelect =
-            widget.habit.completeDays.contains(weekCompleteDays[i].day);
+        weekCompleteDays[i].isSelect = widget.habit!.completeDays.contains(weekCompleteDays[i].day);
       }
     }
 
     dayCompleteDays = CompleteDay.getCompleteDays();
-    if (widget.isModify && widget.habit.period == HabitPeriod.day) {
+    if (widget.isModify && widget.habit!.period == HabitPeriod.day) {
       for (int i = 0; i < dayCompleteDays.length; i++) {
-        dayCompleteDays[i].isSelect =
-            widget.habit.completeDays.contains(dayCompleteDays[i].day);
+        dayCompleteDays[i].isSelect = widget.habit!.completeDays.contains(dayCompleteDays[i].day);
       }
     }
 
-    habitPeriods =
-        HabitPeriod.getHabitPeriods(widget.isModify ? widget.habit.period : 0);
+    habitPeriods = HabitPeriod.getHabitPeriods(widget.isModify ? widget.habit!.period : 0);
     if (widget.isModify) {
-      currentPeriod = widget.habit.period;
+      currentPeriod = widget.habit!.period;
     }
 
     fontAnimationController =
@@ -209,15 +203,13 @@ class _HabitEditPageState extends State<HabitEditPage>
                               width: 30,
                               child: InkWell(
                                 onTap: () async {
-                                  Map<String, dynamic> result =
-                                      await showDialog(
-                                          context: context,
-                                          barrierColor: Colors.black87,
-                                          builder: (context) {
-                                            return IconAndColorPage(
-                                                selectedIcon: _habitIcon,
-                                                selectedColor: _habitColor);
-                                          });
+                                  Map<String, dynamic> result = await showDialog(
+                                      context: context,
+                                      barrierColor: Colors.black87,
+                                      builder: (context) {
+                                        return IconAndColorPage(
+                                            selectedIcon: _habitIcon, selectedColor: _habitColor);
+                                      });
                                   if (result != null) {
                                     setState(() {
                                       _habitIcon = result['icon'];
@@ -244,23 +236,21 @@ class _HabitEditPageState extends State<HabitEditPage>
                         maxLength: 10,
                         initValue: _name,
                         hintText: '名字 ...',
-                        hintTextStyle: AppTheme.appTheme
-                            .hint(fontWeight: FontWeight.bold, fontSize: 18),
-                        textStyle: AppTheme.appTheme.headline1(
-                            fontWeight: FontWeight.bold, fontSize: 18),
+                        hintTextStyle:
+                            AppTheme.appTheme.hint(fontWeight: FontWeight.bold, fontSize: 18),
+                        textStyle:
+                            AppTheme.appTheme.headline1(fontWeight: FontWeight.bold, fontSize: 18),
                         containerDecoration: BoxDecoration(
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.all(Radius.circular(15)),
-                            color: AppTheme.appTheme
-                                .containerBackgroundColor()
-                                .withOpacity(0.6)),
+                            color: AppTheme.appTheme.containerBackgroundColor().withOpacity(0.6)),
                         numDecoration: BoxDecoration(
                             shape: BoxShape.rectangle,
                             color: AppTheme.appTheme.cardBackgroundColor(),
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                             boxShadow: AppTheme.appTheme.containerBoxShadow()),
-                        numTextStyle: AppTheme.appTheme.themeText(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                        numTextStyle:
+                            AppTheme.appTheme.themeText(fontWeight: FontWeight.bold, fontSize: 15),
                         onValueChanged: (value) {
                           _name = value;
                         },
@@ -273,8 +263,8 @@ class _HabitEditPageState extends State<HabitEditPage>
                         margin: EdgeInsets.only(left: 18, top: 8),
                         child: Text(
                           '时段',
-                          style: AppTheme.appTheme.headline1(
-                              fontWeight: FontWeight.w600, fontSize: 18),
+                          style: AppTheme.appTheme
+                              .headline1(fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                       ),
                       timeView(),
@@ -283,8 +273,8 @@ class _HabitEditPageState extends State<HabitEditPage>
                         margin: EdgeInsets.only(left: 18),
                         child: Text(
                           '周期',
-                          style: AppTheme.appTheme.headline1(
-                              fontWeight: FontWeight.w600, fontSize: 18),
+                          style: AppTheme.appTheme
+                              .headline1(fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                       ),
                       periodChooseView(),
@@ -293,8 +283,8 @@ class _HabitEditPageState extends State<HabitEditPage>
                         margin: EdgeInsets.only(left: 18),
                         child: Text(
                           '每${HabitPeriod.getPeriod(currentPeriod)}完成次数',
-                          style: AppTheme.appTheme.headline1(
-                              fontWeight: FontWeight.w600, fontSize: 18),
+                          style: AppTheme.appTheme
+                              .headline1(fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                       ),
                       completeCountView(),
@@ -303,8 +293,8 @@ class _HabitEditPageState extends State<HabitEditPage>
                         margin: EdgeInsets.only(left: 18, top: 8),
                         child: Text(
                           '提醒时间',
-                          style: AppTheme.appTheme.headline1(
-                              fontWeight: FontWeight.w600, fontSize: 18),
+                          style: AppTheme.appTheme
+                              .headline1(fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                       ),
                       timeReminderView(),
@@ -313,32 +303,30 @@ class _HabitEditPageState extends State<HabitEditPage>
                         margin: EdgeInsets.only(left: 18, top: 16),
                         child: Text(
                           '写一句话鼓励自己',
-                          style: AppTheme.appTheme.headline1(
-                              fontWeight: FontWeight.w600, fontSize: 18),
+                          style: AppTheme.appTheme
+                              .headline1(fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                       ),
                       CustomEditField(
                         maxLength: 50,
                         initValue: _mark,
                         hintText: '千里之行，始于足下 ...',
-                        hintTextStyle: AppTheme.appTheme
-                            .hint(fontWeight: FontWeight.normal, fontSize: 16),
-                        textStyle: AppTheme.appTheme.headline1(
-                            fontWeight: FontWeight.normal, fontSize: 16),
+                        hintTextStyle:
+                            AppTheme.appTheme.hint(fontWeight: FontWeight.normal, fontSize: 16),
+                        textStyle: AppTheme.appTheme
+                            .headline1(fontWeight: FontWeight.normal, fontSize: 16),
                         minHeight: 100,
                         containerDecoration: BoxDecoration(
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.all(Radius.circular(15)),
-                            color: AppTheme.appTheme
-                                .containerBackgroundColor()
-                                .withOpacity(0.6)),
+                            color: AppTheme.appTheme.containerBackgroundColor().withOpacity(0.6)),
                         numDecoration: BoxDecoration(
                             shape: BoxShape.rectangle,
                             color: AppTheme.appTheme.cardBackgroundColor(),
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                             boxShadow: AppTheme.appTheme.containerBoxShadow()),
-                        numTextStyle: AppTheme.appTheme.themeText(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                        numTextStyle:
+                            AppTheme.appTheme.themeText(fontWeight: FontWeight.bold, fontSize: 15),
                         onValueChanged: (value) {
                           _mark = value;
                         },
@@ -363,27 +351,22 @@ class _HabitEditPageState extends State<HabitEditPage>
                 return;
               }
               if (widget.isModify) {
-                Habit newHabit = widget.habit.copyWith(
+                Habit newHabit = widget.habit!.copyWith(
                   name: _name,
                   iconPath: _habitIcon,
                   mainColor: _habitColor.value,
                   mark: _mark,
                   period: currentPeriod,
                   doNum: getCurrentCount(),
-                  completeTime: completeTimes
-                      .where((element) => element.isSelect)
-                      .first
-                      .time,
+                  completeTime: completeTimes.where((element) => element.isSelect).first.time,
                   completeDays: _completeDays(),
                   remindTimes: remindTimes
-                      .map((e) =>
-                          '${_twoDigits(e.hour)}:${_twoDigits(e.minute)}')
+                      .map((e) => '${_twoDigits(e.hour)}:${_twoDigits(e.minute)}')
                       .toList(),
                   modifyTime: DateTime.now().millisecondsSinceEpoch,
                   completed: false,
                 );
-                Pair2<List<String>, List<DateTime>> tipReminders =
-                    _updateHabit(newHabit);
+                Pair2<List<String>?, List<DateTime>>? tipReminders = _updateHabit(newHabit);
 
                 if (tipReminders != null) {
                   if (tipReminders.s != null) {
@@ -391,8 +374,8 @@ class _HabitEditPageState extends State<HabitEditPage>
                         context: context,
                         builder: (context) {
                           return ModifyChangeDialog(
-                            title: tipReminders.s[0],
-                            subTitle: tipReminders.s[1],
+                            title: tipReminders.s?[0],
+                            subTitle: tipReminders.s?[1],
                           );
                         });
                   }
@@ -412,28 +395,23 @@ class _HabitEditPageState extends State<HabitEditPage>
                   mark: _mark,
                   period: currentPeriod,
                   doNum: getCurrentCount(),
-                  completeTime: completeTimes
-                      .where((element) => element.isSelect)
-                      .first
-                      .time,
+                  completeTime: completeTimes.where((element) => element.isSelect).first.time,
                   completeDays: _completeDays(),
                   remindTimes: remindTimes
-                      .map((e) =>
-                          '${_twoDigits(e.hour)}:${_twoDigits(e.minute)}')
+                      .map((e) => '${_twoDigits(e.hour)}:${_twoDigits(e.minute)}')
                       .toList(),
                   createTime: DateTime.now().millisecondsSinceEpoch,
+                  modifyTime: DateTime.now().millisecondsSinceEpoch,
                   completed: false,
                   records: []);
               await createAlarmEvents(remindTimes, habit.name);
               BlocProvider.of<HabitsBloc>(context).add(HabitsAdd(habit));
               FlashHelper.toast(context, '保存成功');
-              Future.delayed(Duration(milliseconds: 2000),
-                  () => Navigator.of(context).pop());
+              Future.delayed(Duration(milliseconds: 2000), () => Navigator.of(context).pop());
             },
             child: ScaleTransition(
-              scale: CurvedAnimation(
-                  parent: bottomAnimationController,
-                  curve: Curves.fastOutSlowIn),
+              scale:
+                  CurvedAnimation(parent: bottomAnimationController, curve: Curves.fastOutSlowIn),
               child: Container(
                 alignment: Alignment.center,
                 margin: EdgeInsets.only(bottom: 32),
@@ -446,9 +424,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                 child: Text(
                   '保存',
                   style: AppTheme.appTheme.headline1(
-                      textColor: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600),
+                      textColor: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -458,23 +434,20 @@ class _HabitEditPageState extends State<HabitEditPage>
     );
   }
 
-  Pair2<List<String>, List<DateTime>> _updateHabit(Habit newHabit) {
-    if (originHabit.name != newHabit.name) {
+  Pair2<List<String>?, List<DateTime>>? _updateHabit(Habit newHabit) {
+    if (originHabit!.name != newHabit.name) {
       print('名字不同,新建全部提醒');
-      return Pair2(
-          ['您修改了名字', '您可能需要手动删除名字为${originHabit.name}的闹钟'], remindTimes);
+      return Pair2(['您修改了名字', '您可能需要手动删除名字为${originHabit!.name}的闹钟'], remindTimes);
     }
 
     ///_completeDays() 和 origin 对比
-    if (!ListUtils.equals(_completeDays(), originHabit.completeDays)) {
+    if (!ListUtils.equals(_completeDays(), originHabit!.completeDays)) {
       print('周期不同,新建全部提醒');
-      return Pair2(['您修改了周期', '您可能需要手动删除周期为${originHabit.completeDays}的闹钟'],
-          remindTimes);
+      return Pair2(['您修改了周期', '您可能需要手动删除周期为${originHabit!.completeDays}的闹钟'], remindTimes);
     }
 
     if (remindTimes.length == 0 && originRemindTimes.length > 0) {
-      return Pair2(
-          ['您删除了提醒时间', '您可能需要手动删除名字为${originHabit.name}的闹钟'], remindTimes);
+      return Pair2(['您删除了提醒时间', '您可能需要手动删除名字为${originHabit!.name}的闹钟'], remindTimes);
     }
 
     ///只是添加或修改了提醒时间
@@ -482,9 +455,8 @@ class _HabitEditPageState extends State<HabitEditPage>
     List<DateTime> newRemindTimes = [];
     for (var remindTime in remindTimes) {
       if (ListUtils.containsRemindTime(originRemindTimes, remindTime)) {
-        originRemindTimes.removeWhere((element) =>
-            element.hour == remindTime.hour &&
-            element.minute == remindTime.minute);
+        originRemindTimes.removeWhere(
+            (element) => element.hour == remindTime.hour && element.minute == remindTime.minute);
       } else {
         newRemindTimes.add(remindTime);
       }
@@ -501,7 +473,7 @@ class _HabitEditPageState extends State<HabitEditPage>
       if (originRemindTimes.length > 0) {
         print('提醒将被删除');
         print(originRemindTimes);
-        tips += '\n您可能需要手动删除时间为${originHabit.remindTimes}的闹钟';
+        tips += '\n您可能需要手动删除时间为${originHabit!.remindTimes}的闹钟';
       }
       return Pair2(['您更新了提醒时间', tips], remindTimes);
     }
@@ -512,31 +484,25 @@ class _HabitEditPageState extends State<HabitEditPage>
     if (remindTimes == null || remindTimes.length == 0) {
       return;
     }
-    List<AlarmEvent> events = remindTimes.map((remindTime) {
-      AlarmEvent event = AlarmEvent();
-      event.title = _name;
-      event.description = _name;
-      event.hour = remindTime.hour;
-      event.minutes = remindTime.minute;
-      event.days = _completeDays();
-      return event;
-    }).toList();
-    for (var value in events) {
-      await AlarmPlugin.add2Alarm(value);
-    }
+    // List<AlarmEvent> events = remindTimes.map((remindTime) {
+    //   AlarmEvent event = AlarmEvent();
+    //   event.title = _name;
+    //   event.description = _name;
+    //   event.hour = remindTime.hour;
+    //   event.minutes = remindTime.minute;
+    //   event.days = _completeDays();
+    //   return event;
+    // }).toList();
+    // for (var value in events) {
+    //   await AlarmPlugin.add2Alarm(value);
+    // }
   }
 
   List<int> _completeDays() {
     if (currentPeriod == HabitPeriod.day) {
-      return dayCompleteDays
-          .where((element) => element.isSelect)
-          .map((e) => e.day)
-          .toList();
+      return dayCompleteDays.where((element) => element.isSelect).map((e) => e.day).toList();
     } else if (currentPeriod == HabitPeriod.week) {
-      return weekCompleteDays
-          .where((element) => element.isSelect)
-          .map((e) => e.day)
-          .toList();
+      return weekCompleteDays.where((element) => element.isSelect).map((e) => e.day).toList();
     }
     return monthCompleteDays.map((e) => e.day).toList();
   }
@@ -571,8 +537,7 @@ class _HabitEditPageState extends State<HabitEditPage>
               alignment: Alignment.center,
               child: Text(
                 '${widget.isModify ? '编辑习惯' : '新建习惯'}',
-                style: AppTheme.appTheme
-                    .headline1(fontWeight: FontWeight.bold, fontSize: 20),
+                style: AppTheme.appTheme.headline1(fontWeight: FontWeight.bold, fontSize: 20),
               ),
             ),
           ),
@@ -608,8 +573,7 @@ class _HabitEditPageState extends State<HabitEditPage>
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   shape: BoxShape.rectangle,
-                  border: Border.all(
-                      color: AppTheme.appTheme.grandientColorEnd(), width: 1.5),
+                  border: Border.all(color: AppTheme.appTheme.grandientColorEnd(), width: 1.5),
                   color: completeTime.isSelect
                       ? AppTheme.appTheme.grandientColorEnd()
                       : AppTheme.appTheme.cardBackgroundColor()),
@@ -658,9 +622,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                   width: 68,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
-                    border: Border.all(
-                        color: AppTheme.appTheme.grandientColorEnd(),
-                        width: 1.5),
+                    border: Border.all(color: AppTheme.appTheme.grandientColorEnd(), width: 1.5),
                     color: habitPeroid.isSelect
                         ? AppTheme.appTheme.grandientColorEnd()
                         : AppTheme.appTheme.cardBackgroundColor(),
@@ -684,9 +646,8 @@ class _HabitEditPageState extends State<HabitEditPage>
         ),
         currentPeriod == HabitPeriod.month
             ? SizedBox()
-            : _chooseCompleteDysView(currentPeriod == HabitPeriod.day
-                ? dayCompleteDays
-                : weekCompleteDays)
+            : _chooseCompleteDysView(
+                currentPeriod == HabitPeriod.day ? dayCompleteDays : weekCompleteDays)
       ],
     );
   }
@@ -711,8 +672,7 @@ class _HabitEditPageState extends State<HabitEditPage>
               height: 40,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                      color: AppTheme.appTheme.grandientColorEnd(), width: 1.5),
+                  border: Border.all(color: AppTheme.appTheme.grandientColorEnd(), width: 1.5),
                   color: completeDay.isSelect
                       ? AppTheme.appTheme.grandientColorEnd()
                       : AppTheme.appTheme.cardBackgroundColor()),
@@ -806,8 +766,8 @@ class _HabitEditPageState extends State<HabitEditPage>
                       fontSize: 20 * fontAnimationController.value),
                 );
               },
-              animation: CurvedAnimation(
-                  parent: fontAnimationController, curve: Curves.elasticInOut),
+              animation:
+                  CurvedAnimation(parent: fontAnimationController, curve: Curves.elasticInOut),
             ),
           ),
           GestureDetector(
@@ -840,7 +800,7 @@ class _HabitEditPageState extends State<HabitEditPage>
             DateTime remindTime = remindTimes[index];
             return GestureDetector(
               onTap: () async {
-                DateTime dateTime = await _showDatePicker(context, remindTime);
+                DateTime? dateTime = await _showDatePicker(context, remindTime);
                 if (dateTime == null) {
                   ///delete
                   setState(() {
@@ -864,17 +824,14 @@ class _HabitEditPageState extends State<HabitEditPage>
                 child: Text(
                   '${_twoDigits(remindTime.hour)}:${_twoDigits(remindTime.minute)}',
                   style: AppTheme.appTheme.headline1(
-                      textColor: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15),
+                      textColor: Colors.white, fontWeight: FontWeight.w600, fontSize: 15),
                 ),
               ),
             );
           } else {
             return GestureDetector(
               onTap: () async {
-                DateTime dateTime =
-                    await _showDatePicker(context, DateTime.now());
+                DateTime? dateTime = await _showDatePicker(context, DateTime.now());
                 if (dateTime == null) {
                   return;
                 }
@@ -910,8 +867,7 @@ class _HabitEditPageState extends State<HabitEditPage>
     }
     if (!containsDate) {
       remindTimes.add(dateTime);
-      remindTimes
-          .sort((a, b) => a.millisecondsSinceEpoch - b.millisecondsSinceEpoch);
+      remindTimes.sort((a, b) => a.millisecondsSinceEpoch - b.millisecondsSinceEpoch);
     }
   }
 
@@ -927,13 +883,11 @@ class _HabitEditPageState extends State<HabitEditPage>
       return;
     }
     remindTimes[index] = dateTime;
-    remindTimes
-        .sort((a, b) => a.millisecondsSinceEpoch - b.millisecondsSinceEpoch);
+    remindTimes.sort((a, b) => a.millisecondsSinceEpoch - b.millisecondsSinceEpoch);
   }
 
-  Future<DateTime> _showDatePicker(
-      BuildContext context, DateTime initDateTime) async {
-    return showCupertinoModalPopup(
+  Future<DateTime?> _showDatePicker(BuildContext context, DateTime initDateTime) async {
+    return showCupertinoModalPopup<DateTime?>(
         context: context,
         builder: (context) {
           DateTime currentTime = DateTime.now();
@@ -945,8 +899,7 @@ class _HabitEditPageState extends State<HabitEditPage>
                   ),
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20),
-                      topLeft: Radius.circular(20))),
+                      topRight: Radius.circular(20), topLeft: Radius.circular(20))),
               height: 318,
               child: Column(
                 children: [
@@ -955,11 +908,10 @@ class _HabitEditPageState extends State<HabitEditPage>
                     child: CupertinoTheme(
                       data: CupertinoThemeData(
                           textTheme: CupertinoTextThemeData(
-                              dateTimePickerTextStyle: AppTheme.appTheme
-                                  .numHeadline1(
-                                      textColor: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18))),
+                              dateTimePickerTextStyle: AppTheme.appTheme.numHeadline1(
+                                  textColor: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18))),
                       child: CupertinoDatePicker(
                         initialDateTime: initDateTime,
                         mode: CupertinoDatePickerMode.time,

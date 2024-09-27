@@ -9,7 +9,7 @@ class IconAndColorPage extends StatefulWidget {
   final String selectedIcon;
   final Color selectedColor;
 
-  const IconAndColorPage({Key key, this.selectedIcon, this.selectedColor})
+  const IconAndColorPage({Key? key, required this.selectedIcon, required this.selectedColor})
       : super(key: key);
 
   @override
@@ -18,10 +18,10 @@ class IconAndColorPage extends StatefulWidget {
 
 class _IconAndColorPageState extends State<IconAndColorPage> {
   List<HabitIcon> icons = [];
-  HabitIcon _selectIcon;
+  late HabitIcon _selectIcon;
 
   List<HabitColor> backgroundColors = [];
-  HabitColor _selectBackgroundColor;
+  HabitColor? _selectBackgroundColor;
 
   @override
   void initState() {
@@ -92,7 +92,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           shape: BoxShape.rectangle,
                           color: (icons[index].isSelect
-                              ? _selectBackgroundColor.color
+                              ? _selectBackgroundColor?.color
                               : AppTheme.appTheme.containerBackgroundColor())),
                       alignment: Alignment.center,
                       child: Image.asset(
@@ -165,7 +165,7 @@ class _IconAndColorPageState extends State<IconAndColorPage> {
                   Map<String, dynamic> result = Map();
                   print(_selectIcon.icon);
                   result['icon'] = _selectIcon.icon;
-                  result['color'] = _selectBackgroundColor.color;
+                  result['color'] = _selectBackgroundColor?.color;
                   Navigator.of(context).pop(result);
                 },
                 child: SvgPicture.asset(

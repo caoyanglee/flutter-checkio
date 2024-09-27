@@ -9,18 +9,16 @@ enum AppThemeMode {
   Dark,
 }
 
-AppThemeMode getInitThemeMode(String mode) {
+AppThemeMode getInitThemeMode(String? mode) {
   print(mode);
-  AppThemeMode appThemeMode = AppThemeMode.values.firstWhere(
-      (element) => element.toString() == mode,
-      orElse: () => AppThemeMode.Light);
+  AppThemeMode appThemeMode = AppThemeMode.values
+      .firstWhere((element) => element.toString() == mode, orElse: () => AppThemeMode.Light);
   return appThemeMode;
 }
 
-AppThemeColorMode getInitColorMode(String mode) {
-  AppThemeColorMode colorMode = AppThemeColorMode.values.firstWhere(
-      (element) => element.toString() == mode,
-      orElse: () => AppThemeColorMode.Blue);
+AppThemeColorMode getInitColorMode(String? mode) {
+  AppThemeColorMode colorMode = AppThemeColorMode.values
+      .firstWhere((element) => element.toString() == mode, orElse: () => AppThemeColorMode.Blue);
   return colorMode;
 }
 
@@ -84,18 +82,18 @@ class AppTheme {
 
   static final AppTheme appTheme = AppTheme._();
 
-  AppThemeMode currentThemeMode;
-  AppThemeColorMode currentColorMode;
-  AppFontMode currentFontMode;
+  late AppThemeMode currentThemeMode;
+  late AppThemeColorMode currentColorMode;
+  late AppFontMode currentFontMode;
 
-  String fontFamliy;
+  late String fontFamliy;
 
   String numFontFamliy = 'Montserrat';
 
-  GradientColor gradientColor;
+  late GradientColor gradientColor;
 
-  void setThemeState(AppThemeMode themeMode, AppThemeColorMode themeColorMode,
-      AppFontMode fontMode) {
+  void setThemeState(
+      AppThemeMode themeMode, AppThemeColorMode themeColorMode, AppFontMode fontMode) {
     currentThemeMode = themeMode;
     currentColorMode = themeColorMode;
     currentFontMode = fontMode;
@@ -117,24 +115,29 @@ class AppTheme {
 
   ThemeData lightTheme() {
     return ThemeData.light().copyWith(
-        primaryColor: Color(0xFFF2F7FB),
-        primaryColorDark: Color(0xFF6B6B6B),
-        accentColor: grandientColorEnd());
+      primaryColor: Color(0xFFF2F7FB),
+      primaryColorDark: Color(0xFF6B6B6B),
+      // accentColor: grandientColorEnd()
+    );
   }
 
   ThemeData darkTheme() {
     return ThemeData.dark().copyWith(
-        primaryColor: Color(0xFF17262A),
-        primaryColorDark: Color(0xFF6B6B6B),
-        accentColor: grandientColorEnd());
+      primaryColor: Color(0xFF17262A),
+      primaryColorDark: Color(0xFF6B6B6B),
+      // accentColor: grandientColorEnd()
+    );
   }
 
   String fontFamily(AppFontMode fontMode) {
     switch (fontMode) {
       case AppFontMode.MaShanZheng:
         return 'MaShanZheng';
+      case AppFontMode.Roboto:
+        return 'Roboto';
+      default:
+        return 'Roboto';
     }
-    return 'Roboto';
   }
 
   static GradientColor getGradientColor(AppThemeColorMode mode) {
@@ -148,42 +151,34 @@ class AppTheme {
 
   ///------------字体------------
   /// 黑/白
-  TextStyle headline1(
-      {FontWeight fontWeight, double fontSize, Color textColor}) {
+  TextStyle headline1({FontWeight? fontWeight, double? fontSize, Color? textColor}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: textColor == null
-            ? (isDark() ? Colors.white : Colors.black)
-            : textColor,
+        color: textColor == null ? (isDark() ? Colors.white : Colors.black) : textColor,
         fontFamily: fontFamliy);
   }
 
   /// 黑/灰色
-  TextStyle headline2(
-      {FontWeight fontWeight, double fontSize, Color textColor}) {
+  TextStyle headline2({FontWeight? fontWeight, double? fontSize, Color? textColor}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: textColor == null
-            ? (isDark() ? Colors.white70 : Colors.black54)
-            : textColor,
+        color: textColor == null ? (isDark() ? Colors.white70 : Colors.black54) : textColor,
         fontFamily: fontFamliy);
   }
 
   /// Edit hint text
-  TextStyle hint({FontWeight fontWeight, double fontSize}) {
+  TextStyle hint({FontWeight? fontWeight, double? fontSize}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: isDark()
-            ? Colors.white.withOpacity(0.5)
-            : Colors.black.withOpacity(0.5),
+        color: isDark() ? Colors.white.withOpacity(0.5) : Colors.black.withOpacity(0.5),
         fontFamily: fontFamliy);
   }
 
   /// theme color text
-  TextStyle themeText({FontWeight fontWeight, double fontSize}) {
+  TextStyle themeText({FontWeight? fontWeight, double? fontSize}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
@@ -192,31 +187,24 @@ class AppTheme {
   }
 
   ///数字
-  TextStyle numHeadline1(
-      {FontWeight fontWeight, double fontSize, Color textColor}) {
+  TextStyle numHeadline1({FontWeight? fontWeight, double? fontSize, Color? textColor}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: textColor == null
-            ? (isDark() ? Colors.white : Colors.black)
-            : textColor,
+        color: textColor == null ? (isDark() ? Colors.white : Colors.black) : textColor,
         fontFamily: numFontFamliy);
   }
 
   ///数字
-  TextStyle numHeadline2(
-      {FontWeight fontWeight, double fontSize, Color textColor}) {
+  TextStyle numHeadline2({FontWeight? fontWeight, double? fontSize, Color? textColor}) {
     return TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: textColor == null
-            ? (isDark() ? Colors.white70 : Colors.black54)
-            : textColor,
+        color: textColor == null ? (isDark() ? Colors.white70 : Colors.black54) : textColor,
         fontFamily: numFontFamliy);
   }
 
-  TextStyle textStyle(
-      {Color textColor, FontWeight fontWeight, double fontSize}) {
+  TextStyle textStyle({Color? textColor, FontWeight? fontWeight, double? fontSize}) {
     return TextStyle(
         fontFamily: fontFamily(currentFontMode),
         fontSize: fontSize ?? 20,
@@ -250,7 +238,7 @@ class AppTheme {
   }
 
   ///背景统一渐变色
-  LinearGradient containerGradient({Alignment begin, Alignment end}) {
+  LinearGradient containerGradient({Alignment? begin, Alignment? end}) {
     return LinearGradient(
         colors: [grandientColorStart(), grandientColorEnd()],
         begin: begin ?? Alignment.bottomLeft,
@@ -258,8 +246,7 @@ class AppTheme {
   }
 
   ///背景统一渐变色
-  LinearGradient containerGradientWithOpacity(
-      {Alignment begin, Alignment end, double opacity}) {
+  LinearGradient containerGradientWithOpacity({Alignment? begin, Alignment? end, double? opacity}) {
     return LinearGradient(colors: [
       grandientColorStart().withOpacity(opacity ?? 1),
       grandientColorEnd().withOpacity(opacity ?? 1)
@@ -268,21 +255,13 @@ class AppTheme {
 
   ///通一阴影
   List<BoxShadow> containerBoxShadow() {
-    return [
-      BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          offset: Offset(5, 5),
-          blurRadius: 16)
-    ];
+    return [BoxShadow(color: Colors.black.withOpacity(0.1), offset: Offset(5, 5), blurRadius: 16)];
   }
 
   ///带颜色阴影
   List<BoxShadow> coloredBoxShadow() {
     return [
-      BoxShadow(
-          color: grandientColorStart().withOpacity(0.3),
-          offset: Offset(5, 5),
-          blurRadius: 16)
+      BoxShadow(color: grandientColorStart().withOpacity(0.3), offset: Offset(5, 5), blurRadius: 16)
     ];
   }
 

@@ -16,7 +16,7 @@ class AllHabitItemView extends StatefulWidget {
   final Function(Habit) onTap;
   final bool isOpen;
 
-  const AllHabitItemView({Key key, this.habit, this.onTap, this.isOpen})
+  const AllHabitItemView({Key? key, required this.habit, required this.onTap, required this.isOpen})
       : super(key: key);
 
   @override
@@ -24,7 +24,7 @@ class AllHabitItemView extends StatefulWidget {
 }
 
 class _AllHabitItemViewState extends State<AllHabitItemView> {
-  bool _wasOpen;
+  bool _wasOpen=false;
 
   double ratio = 1.8;
 
@@ -84,7 +84,7 @@ class _AllHabitItemViewState extends State<AllHabitItemView> {
                       },
                       habit: widget.habit,
                       records:
-                          HabitUtil.combinationRecords(widget.habit.records),
+                          HabitUtil.combinationRecords(widget.habit?.records),
                     ),
                   ),
                 ],

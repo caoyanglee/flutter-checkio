@@ -12,14 +12,14 @@ import 'package:timefly/widget/float_modal.dart';
 class HabitListView extends StatefulWidget {
   ///主页动画控制器，整体ListView的显示动画
   final AnimationController mainScreenAnimationController;
-  final Animation<dynamic> mainScreenAnimation;
+  final Animation<double> mainScreenAnimation;
   final List<Habit> habits;
 
   const HabitListView(
-      {Key key,
-      this.mainScreenAnimationController,
-      this.mainScreenAnimation,
-      this.habits})
+      {Key? key,
+      required this.mainScreenAnimationController,
+      required this.mainScreenAnimation,
+      required this.habits})
       : super(key: key);
 
   @override
@@ -28,7 +28,7 @@ class HabitListView extends StatefulWidget {
 
 class _HabitListViewState extends State<HabitListView>
     with TickerProviderStateMixin {
-  AnimationController animationController;
+  late AnimationController animationController;
 
   @override
   void initState() {
@@ -89,10 +89,10 @@ class _HabitListViewState extends State<HabitListView>
 class HabitView extends StatefulWidget {
   final Habit habit;
   final AnimationController animationController;
-  final Animation<dynamic> animation;
+  final Animation<double> animation;
 
   const HabitView(
-      {Key key, this.habit, this.animationController, this.animation})
+      {Key? key, required this.habit, required this.animationController, required this.animation})
       : super(key: key);
 
   @override
@@ -102,8 +102,8 @@ class HabitView extends StatefulWidget {
 }
 
 class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
-  AnimationController tapAnimationController;
-  Animation<double> tapAnimation;
+  late AnimationController tapAnimationController;
+  late Animation<double> tapAnimation;
 
   int _initValue = 0;
   int _maxValue = 1;
@@ -123,8 +123,8 @@ class _HabitView extends State<HabitView> with SingleTickerProviderStateMixin {
     super.initState();
   }
 
-  DateTime start;
-  DateTime end;
+  late DateTime start;
+  late DateTime end;
 
   void setCheckValue() {
     DateTime now = DateTime.now();

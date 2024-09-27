@@ -1,8 +1,7 @@
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
+    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader)
     }
 }
 
@@ -18,7 +17,7 @@ if (flutterVersionCode == null) {
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '1.0.0'
 }
 
 apply plugin: 'com.android.application'
@@ -26,45 +25,64 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion flutter.compileSdkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    lintOptions  {
-        checkReleaseBuilds false
-        disable 'InvalidPackage'
-    }
-
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.sia.timefly"
-        minSdkVersion 16
-        targetSdkVersion 28
+        applicationId "com.weimu.duriandiary"
+//        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 24
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-
-       /* ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a"
-        }*/
+        flavorDimensions "durian_diary"
+        manifestPlaceholders += [TENCENT_APP_ID: "102002996"]
     }
 
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output -> output.versionCodeOverride = flutterVersionCode.toInteger()
+        }
+    }
+
+    ndkVersion '25.2.9519653'
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+        debug {
+            versionNameSuffix ""
         }
     }
 }
-
-
 
 flutter {
     source '../..'
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
+
+////保持版本一致 处理链接 https://developer.android.com/studio/build/configure-apk-splits#configure-split
+//android.applicationVariants.all { variant ->
+//
+//    // Assigns a different version code for each output APK
+//    // other than the universal APK.
+//    variant.outputs.each { output ->
+//        output.versionCodeOverride = + variant.versionCode
+//    }
+//}

@@ -13,12 +13,12 @@ class UserState extends Equatable {
 }
 
 class UserLoadSuccess extends UserState {
-  final User user;
+  final User? user;
 
   UserLoadSuccess(this.user);
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user!];
 }
 
 class UserLoadingInProgress extends UserState {}
@@ -74,7 +74,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   Stream<UserState> _mapUserLoadState(UserLoadEvent event) async* {
-    User user = await DatabaseProvider.db.getCurrentUser();
+    User? user = await DatabaseProvider.db.getCurrentUser();
     // SessionUtils.login(user);
     yield UserLoadSuccess(user);
     habitsBloc.add(HabitsLoad());

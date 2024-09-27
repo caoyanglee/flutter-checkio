@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:timefly/models/complete_time.dart';
 import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/habit_list_model.dart';
@@ -14,35 +16,32 @@ class HabitUtil {
 
     ///过滤当天
     habits = habits
-        .where((habit) =>
-            habit.period == HabitPeriod.month ||
-            (habit.completeDays.contains(weekend)))
+        .where(
+            (habit) => habit.period == HabitPeriod.month || (habit.completeDays.contains(weekend)))
         .toList();
     if (habits.length > 0) {
-      Map<int, List<Habit>> map = {};
+      HashMap<int, List<Habit>> map = HashMap<int, List<Habit>>();
       habits.forEach((habit) {
         int completeTime = habit.completeTime;
         if (map[completeTime] == null) {
-          map[completeTime] = List<Habit>();
+          map[completeTime] = <Habit>[];
         }
-        map[completeTime].add(habit);
+        map[completeTime]?.add(habit);
       });
 
       List<int> keys = map.keys.toList();
       keys.sort((a, b) => a.compareTo(b));
 
-      Map<int, List<Habit>> newMap = {};
+      HashMap<int, List<Habit>> newMap = HashMap<int, List<Habit>>();
       keys.forEach((key) {
-        newMap[key] = map[key];
+        newMap[key] = map[key]!;
       });
 
       newMap.forEach((completeTime, habits) {
         datas.add(OnDayHabitListData(
-            type: OnDayHabitListData.typeTitle,
-            value: CompleteTime.getTime(completeTime)));
+            type: OnDayHabitListData.typeTitle, value: CompleteTime.getTime(completeTime)));
         habits.sort((a, b) => b.createTime.compareTo(a.createTime));
-        datas.add(OnDayHabitListData(
-            type: OnDayHabitListData.typeHabits, value: habits));
+        datas.add(OnDayHabitListData(type: OnDayHabitListData.typeHabits, value: habits));
       });
     }
     return datas;
@@ -61,13 +60,12 @@ class HabitUtil {
 
   /// 获取一个习惯历史最大连续数量
   /// String 日期start,end int 数量
-  static Map<String, int> getHabitStreaks(
-      Map<String, List<HabitRecord>> checks) {
+  static Map<String, int> getHabitStreaks(Map<String, List<HabitRecord>> checks) {
     List<String> days = checks.keys.toList();
     days.sort((a, b) =>
         DateUtil.parseYearAndMonthAndDayWithString(a).millisecondsSinceEpoch -
         DateUtil.parseYearAndMonthAndDayWithString(b).millisecondsSinceEpoch);
-    Map<String, int> streaks = {};
+    HashMap<String, int> streaks = HashMap<String, int>();
     if (days.length == 0) {
       return streaks;
     }
@@ -97,11 +95,11 @@ class HabitUtil {
     }
 
     List<String> keys = streaks.keys.toList();
-    keys.sort((a, b) => streaks[b] == streaks[a] ? 1 : streaks[b] - streaks[a]);
+    keys.sort((a, b) => streaks[b] == streaks[a] ? 1 : streaks[b]! - streaks[a]!);
     Map<String, int> newStreaks = {};
     keys.forEach((key) {
-      if (streaks[key] >= 1) {
-        newStreaks[key] = streaks[key];
+      if (streaks[key]! >= 1) {
+        newStreaks[key] = streaks[key]!;
       }
     });
     return newStreaks;
@@ -163,14 +161,13 @@ class HabitUtil {
     return habits;
   }
 
-  static Map<String, List<HabitRecord>> combinationRecords(
-      List<HabitRecord> records) {
+  static Map<String, List<HabitRecord>> combinationRecords(List<HabitRecord>? records) {
     Map<String, List<HabitRecord>> recordsMap = {};
-    records.forEach((record) {
+    records?.forEach((record) {
       DateTime time = DateTime.fromMillisecondsSinceEpoch(record.time);
       String timeStr = '${time.year}-${time.month}-${time.day}';
       if (recordsMap.containsKey(timeStr)) {
-        recordsMap[timeStr].add(record);
+        recordsMap[timeStr]?.add(record);
       } else {
         recordsMap[timeStr] = [record];
       }
@@ -183,8 +180,7 @@ class HabitUtil {
     List<HabitRecord> recordList = List<HabitRecord>.from(records);
     recordList = recordList
         .where((record) =>
-            record.time > start.millisecondsSinceEpoch &&
-            record.time < end.millisecondsSinceEpoch)
+            record.time > start.millisecondsSinceEpoch && record.time < end.millisecondsSinceEpoch)
         .toList();
     return combinationRecords(recordList);
   }
@@ -234,8 +230,7 @@ class HabitUtil {
     habits.forEach((habit) {
       habit.records.forEach((record) {
         recordTime = DateTime.fromMillisecondsSinceEpoch(record.time);
-        String dayString =
-            '${recordTime.year}-${recordTime.month}-${recordTime.day}';
+        String dayString = '${recordTime.year}-${recordTime.month}-${recordTime.day}';
         if (!days.contains(dayString)) {
           days.add(dayString);
         }
@@ -261,8 +256,7 @@ class HabitUtil {
   }
 
   ///获取当前拥有最大连续次数的习惯们
-  static Pair2<int, List<Habit>> getMostHistoryStreakHabits(
-      List<Habit> habits) {
+  static Pair2<int, List<Habit>> getMostHistoryStreakHabits(List<Habit> habits) {
     List<Habit> newHabits = [];
     int currentMaxStreak = 1;
 
@@ -283,7 +277,7 @@ class HabitUtil {
 
   ///根据时间过滤记录
   static List<HabitRecord> filterHabitRecordsWithTime(List<HabitRecord> records,
-      {DateTime start, DateTime end}) {
+      {DateTime? start, DateTime? end}) {
     if (records == null || records.length == 0) {
       return <HabitRecord>[];
     }
@@ -302,11 +296,10 @@ class HabitUtil {
     return habitRecords;
   }
 
-  static List<HabitRecord> getHabitRecordsWithPeroid(
-      List<HabitRecord> records, int period) {
+  static List<HabitRecord> getHabitRecordsWithPeroid(List<HabitRecord> records, int period) {
     DateTime now = DateTime.now();
-    DateTime start;
-    DateTime end;
+    DateTime? start;
+    DateTime? end;
     switch (period) {
       case HabitPeriod.day:
         start = DateUtil.startOfDay(now);
@@ -324,15 +317,13 @@ class HabitUtil {
     return filterHabitRecordsWithTime(records, start: start, end: end);
   }
 
-  static int getDoCountOfHabit(
-      List<HabitRecord> records, DateTime start, DateTime end) {
+  static int getDoCountOfHabit(List<HabitRecord> records, DateTime start, DateTime end) {
     start = DateUtil.startOfDay(start);
     end = DateUtil.endOfDay(end);
 
     int count = records
         .where((record) =>
-            record.time > start.millisecondsSinceEpoch &&
-            record.time < end.millisecondsSinceEpoch)
+            record.time > start.millisecondsSinceEpoch && record.time < end.millisecondsSinceEpoch)
         .length;
     return count;
   }

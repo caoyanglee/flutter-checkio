@@ -14,11 +14,11 @@ class CalendarView extends StatefulWidget {
   final Map<String, List<HabitRecord>> records;
 
   const CalendarView(
-      {Key key,
-      this.currentDay,
-      this.caculatorHeight,
-      this.habit,
-      this.records})
+      {Key? key,
+      required this.currentDay,
+      required this.caculatorHeight,
+      required this.habit,
+      required this.records})
       : super(key: key);
 
   @override
@@ -26,7 +26,7 @@ class CalendarView extends StatefulWidget {
 }
 
 class _CalendarViewState extends State<CalendarView> {
-  List<DateTime> days;
+  late List<DateTime?> days;
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _CalendarViewState extends State<CalendarView> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7, childAspectRatio: 1.8, mainAxisSpacing: 5),
           itemBuilder: (context, index) {
-            DateTime day = days[index];
+            DateTime? day = days[index];
             if (day == null) {
               if (index < 7) {
                 return Container(
@@ -77,9 +77,9 @@ class _CalendarViewState extends State<CalendarView> {
     );
   }
 
-  BoxDecoration getBox(DateTime day, int index) {
-    DateTime lastDay = days[index - 1];
-    DateTime nextDay = days.length - 1 > index ? days[index + 1] : null;
+  BoxDecoration getBox(DateTime? day, int index) {
+    DateTime? lastDay = days[index - 1];
+    DateTime? nextDay = days.length - 1 > index ? days[index + 1] : null;
 
     if (containsDay(day)) {
       bool containLastDay = containsDay(lastDay);
@@ -135,7 +135,7 @@ class _CalendarViewState extends State<CalendarView> {
         shape: BoxShape.circle, color: Color(widget.habit.mainColor));
   }
 
-  bool containsDay(DateTime date) {
+  bool containsDay(DateTime? date) {
     if (date == null) {
       return false;
     }

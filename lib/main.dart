@@ -18,7 +18,7 @@ import 'models/user.dart';
 void main() async {
   Bloc.observer = SimpleBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationPlugin.ensureInitialized();
+  // NotificationPlugin.ensureInitialized();
   await SessionUtils.sharedInstance().init();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,

@@ -6,33 +6,33 @@ class CustomEditField extends StatefulWidget {
   final BoxDecoration containerDecoration;
   final BoxDecoration numDecoration;
 
-  final int maxLines;
+  final int? maxLines;
   final int maxLength;
-  final double minHeight;
+  final double? minHeight;
 
   final String hintText;
   final TextStyle hintTextStyle;
   final TextStyle textStyle;
   final TextStyle numTextStyle;
-  final bool autoFucus;
-  final TextInputType inputType;
+  final bool? autoFucus;
+  final TextInputType? inputType;
 
   final String initValue;
   final ValueChanged<String> onValueChanged;
-  final VoidCallback onCompleted;
+  final VoidCallback? onCompleted;
 
   const CustomEditField(
-      {Key key,
-      this.containerDecoration,
+      {Key? key,
+      required this.containerDecoration,
       this.maxLines,
-      this.hintTextStyle,
-      this.textStyle,
-      this.initValue,
-      this.onValueChanged,
-      this.hintText,
-      this.maxLength,
-      this.numDecoration,
-      this.numTextStyle,
+      required this.hintTextStyle,
+      required this.textStyle,
+      required this.initValue,
+      required this.onValueChanged,
+      required this.hintText,
+      required this.maxLength,
+      required this.numDecoration,
+      required this.numTextStyle,
       this.minHeight,
       this.autoFucus,
       this.inputType,
@@ -47,9 +47,9 @@ class _CustomEditFieldState extends State<CustomEditField>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   ///文本内容
   String _value = '';
-  TextEditingController editingController;
-  AnimationController numAnimationController;
-  Animation<double> numAnimation;
+  late TextEditingController editingController;
+  late AnimationController numAnimationController;
+  late Animation<double> numAnimation;
 
   @override
   void initState() {
@@ -57,8 +57,7 @@ class _CustomEditFieldState extends State<CustomEditField>
     editingController = TextEditingController(text: widget.initValue);
     numAnimationController =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
-    numAnimation = CurvedAnimation(
-        parent: numAnimationController, curve: Curves.easeOutBack);
+    numAnimation = CurvedAnimation(parent: numAnimationController, curve: Curves.easeOutBack);
     if (widget.initValue.length > 0) {
       numAnimationController.forward(from: 0.3);
     }
@@ -73,15 +72,15 @@ class _CustomEditFieldState extends State<CustomEditField>
         alignment: Alignment.topRight,
         children: [
           Container(
-            constraints: BoxConstraints(
-                minHeight: widget.minHeight == null ? 0 : widget.minHeight),
+            constraints:
+                BoxConstraints(minHeight:widget.minHeight??0),
             margin: EdgeInsets.only(top: 10, left: 32, right: 32),
             decoration: widget.containerDecoration,
             child: TextField(
               strutStyle: StrutStyle(height: 1.5),
               controller: editingController,
               showCursor: true,
-              autofocus: widget.autoFucus == null ? false : widget.autoFucus,
+              autofocus: widget.autoFucus??false,
               style: widget.textStyle,
               maxLength: widget.maxLength,
               decoration: InputDecoration(
@@ -91,16 +90,12 @@ class _CustomEditFieldState extends State<CustomEditField>
                   filled: true,
                   counterText: '',
                   enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 0, color: Colors.transparent),
+                      borderSide: BorderSide(width: 0, color: Colors.transparent),
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                   focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 0, color: Colors.transparent),
+                      borderSide: BorderSide(width: 0, color: Colors.transparent),
                       borderRadius: BorderRadius.all(Radius.circular(15)))),
-              maxLines: (widget.maxLines == null || widget.maxLines == 1)
-                  ? null
-                  : widget.maxLines,
+              maxLines: (widget.maxLines == null || widget.maxLines == 1) ? null : widget.maxLines,
               keyboardType: widget.inputType == null
                   ? (widget.maxLines == null || widget.maxLines == 1)
                       ? TextInputType.name
@@ -120,9 +115,10 @@ class _CustomEditFieldState extends State<CustomEditField>
                   numAnimationController.reverse(from: 0.3);
                 }
               },
-              onEditingComplete: widget.onCompleted ?? () {
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
+              onEditingComplete: widget.onCompleted ??
+                  () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
             ),
           ),
           ScaleTransition(

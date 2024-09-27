@@ -13,7 +13,7 @@ class NotificationPlugin {
 
   factory NotificationPlugin.getInstance() => _getInstance();
 
-  static NotificationPlugin _instance;
+  static NotificationPlugin? _instance;
 
   static _getInstance() {
     if (_instance == null) {
@@ -22,7 +22,7 @@ class NotificationPlugin {
     return _instance;
   }
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   NotificationPlugin._() {
     init();
@@ -38,33 +38,26 @@ class NotificationPlugin {
 
   void _requestPermission() {
     flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
-        .requestPermissions(alert: true, sound: true, badge: true);
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(alert: true, sound: true, badge: true);
   }
 
   void initializePlatformSpecifics() async {
     AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('notification');
-    IOSInitializationSettings iosInitializationSettings =
-        IOSInitializationSettings();
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-            android: androidInitializationSettings,
-            iOS: iosInitializationSettings);
+    DarwinInitializationSettings iosInitializationSettings = DarwinInitializationSettings();
+    final InitializationSettings initializationSettings = InitializationSettings(
+        android: androidInitializationSettings, iOS: iosInitializationSettings);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (payload) async {});
+        onDidReceiveBackgroundNotificationResponse: (payload) async {});
   }
 
   Future<void> scheduleNotification() async {
     var dateTime = tz.TZDateTime.now(tz.UTC).add(Duration(seconds: 5));
     var androidChannelSpecifics = AndroidNotificationDetails(
-        'channel_id', 'channel_name', 'channel_desc',
-        importance: Importance.max,
-        priority: Priority.high,
-        timeoutAfter: 5000);
-    var platformChannelSpecifics =
-        NotificationDetails(android: androidChannelSpecifics);
+        'channel_id', 'channel_name', channelDescription:'channel_desc',
+        importance: Importance.max, priority: Priority.high, timeoutAfter: 5000);
+    var platformChannelSpecifics = NotificationDetails(android: androidChannelSpecifics);
     await flutterLocalNotificationsPlugin.zonedSchedule(
         1, 'title', 'body', dateTime, platformChannelSpecifics,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,

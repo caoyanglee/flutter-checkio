@@ -14,7 +14,8 @@ class OneDayRateView extends StatelessWidget {
   final List<Habit> allHabits;
   final Animation<Offset> animation;
 
-  const OneDayRateView({Key key, this.period, this.allHabits, this.animation})
+  const OneDayRateView(
+      {Key? key, required this.period, required this.allHabits, required this.animation})
       : super(key: key);
 
   @override
@@ -22,9 +23,7 @@ class OneDayRateView extends StatelessWidget {
     List<Habit> habits = allHabits;
     if (period == HabitPeriod.day) {
       int weekend = DateTime.now().weekday;
-      habits = habits
-          .where((element) => element.completeDays.contains(weekend))
-          .toList();
+      habits = habits.where((element) => element.completeDays.contains(weekend)).toList();
     }
     int needCompleteNnm = _needCompleteNum(habits);
     int hasDoNum = _hasDoNum(habits);
@@ -64,14 +63,13 @@ class OneDayRateView extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   CircleProgressBar(
-                      backgroundColor:
-                          AppTheme.appTheme.containerBackgroundColor(),
+                      backgroundColor: AppTheme.appTheme.containerBackgroundColor(),
                       foregroundColor: AppTheme.appTheme.grandientColorEnd(),
                       value: hasDoNum / needCompleteNnm),
                   Text(
                     '${((hasDoNum / needCompleteNnm) * 100).toInt()}%',
-                    style: AppTheme.appTheme.numHeadline1(
-                        fontSize: 14, fontWeight: FontWeight.normal),
+                    style:
+                        AppTheme.appTheme.numHeadline1(fontSize: 14, fontWeight: FontWeight.normal),
                   )
                 ],
               ),
@@ -104,10 +102,8 @@ class OneDayRateView extends StatelessWidget {
           children: [
             Text(
               '共需完成',
-              style: AppTheme.appTheme.headline1(
-                  textColor: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal),
+              style: AppTheme.appTheme
+                  .headline1(textColor: Colors.white, fontSize: 14, fontWeight: FontWeight.normal),
             ),
             SizedBox(
               width: 3,
@@ -123,9 +119,7 @@ class OneDayRateView extends StatelessWidget {
             ),
             Text('已完成',
                 style: AppTheme.appTheme.headline1(
-                    textColor: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal)),
+                    textColor: Colors.white, fontSize: 14, fontWeight: FontWeight.normal)),
             SizedBox(
               width: 3,
             ),

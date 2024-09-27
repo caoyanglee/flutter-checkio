@@ -97,8 +97,8 @@ void main() {
   int count = 1;
   for (int i = days.length - 1; i >= 0; i--) {
     DateTime dayi = getDay(days[i]);
-    DateTime nextDay = i == 0 ? null : getDay(days[i - 1]);
-    if (isNextDay(dayi, nextDay) && nextDay != null) {
+    DateTime? nextDay = i == 0 ? null : getDay(days[i - 1]);
+    if (nextDay != null && isNextDay(dayi, nextDay)) {
       count++;
     } else {
       sort.add(int.parse('$count'));
@@ -112,8 +112,7 @@ void main() {
 List<DateTime> getMonthsSince2020() {
   List<DateTime> months = [];
   int i = 1;
-  while (DateTime(2020, i, 1).microsecondsSinceEpoch <
-      DateTime.now().microsecondsSinceEpoch) {
+  while (DateTime(2020, i, 1).microsecondsSinceEpoch < DateTime.now().microsecondsSinceEpoch) {
     months.add(DateTime(2020, i, 1));
     i++;
   }

@@ -25,7 +25,7 @@ class OneDayScreen extends StatefulWidget {
 class _OneDayScreenState extends State<OneDayScreen>
     with TickerProviderStateMixin {
   ///整个页面动画控制器
-  AnimationController screenAnimationController;
+  late AnimationController screenAnimationController;
 
   @override
   void initState() {
@@ -58,7 +58,7 @@ class _OneDayScreenState extends State<OneDayScreen>
                 itemCount: listData.length,
                 itemBuilder: (context, index) {
                   OnDayHabitListData data = listData[index];
-                  Widget widget;
+                  Widget? widget;
                   switch (data.type) {
                     case OnDayHabitListData.typeHeader:
                       widget = TimeAndWordView(
@@ -164,7 +164,7 @@ class _OneDayScreenState extends State<OneDayScreen>
     return datas;
   }
 
-  Widget getTitleView(String title, Animation animation,
+  Widget getTitleView(String title, Animation<double> animation,
       AnimationController animationController) {
     return AnimatedBuilder(
       animation: animationController,

@@ -10,7 +10,7 @@ class HabitRecord extends Equatable {
   final int time;
   final String content;
 
-  HabitRecord({this.time, this.content, this.habitId});
+  HabitRecord({required this.time, required this.content, this.habitId = ""});
 
   @override
   String toString() {
@@ -19,9 +19,9 @@ class HabitRecord extends Equatable {
 
   static HabitRecord fromJson(Map<String, dynamic> json) {
     return HabitRecord(
-        habitId: json['habitId']?.toString(),
-        time: json["time"]?.toInt(),
-        content: json["content"]?.toString());
+        habitId: json['habitId'].toString(),
+        time: json["time"].toInt(),
+        content: json["content"].toString());
   }
 
   Map<String, dynamic> toJson() {
@@ -36,11 +36,7 @@ class HabitRecord extends Equatable {
   List<Object> get props => [habitId, time, content];
 
   HabitRecord copyWith(
-      {String habitId,
-      int time,
-      String content,
-      String userId,
-      String objectId}) {
+      {String? habitId, int? time, String? content, String? userId, String? objectId}) {
     return HabitRecord(
         habitId: habitId ?? this.habitId,
         time: time ?? this.time,
@@ -90,20 +86,20 @@ class Habit extends Equatable {
   final List<HabitRecord> records;
 
   Habit(
-      {this.id,
-      this.name,
-      this.iconPath,
-      this.mainColor,
-      this.mark,
-      this.remindTimes,
-      this.completeDays,
-      this.completeTime,
-      this.period,
-      this.createTime,
-      this.modifyTime,
-      this.completed,
-      this.doNum,
-      this.records});
+      {required this.id,
+      required this.name,
+      required this.iconPath,
+      required this.mainColor,
+      required this.mark,
+      required this.remindTimes,
+      this.completeDays = const [],
+      this.completeTime = 0,
+      required this.period,
+      required this.createTime,
+      required this.modifyTime,
+      required this.completed,
+      this.doNum = 0,
+      this.records = const []});
 
   @override
   String toString() {
@@ -114,16 +110,15 @@ class Habit extends Equatable {
         ' doNum: $doNum, records: $records}';
   }
 
-  static Habit fromJson(Map<String, dynamic> json,
-      {List<HabitRecord> records}) {
-    var remindTimes = List<String>();
+  static Habit fromJson(Map<String, dynamic> json, {List<HabitRecord> records = const []}) {
+    var remindTimes = <String>[];
     if (json["remindTimes"] != null) {
       var timesJson = jsonDecode(json["remindTimes"]);
       timesJson.forEach((json) {
         remindTimes.add(json.toString());
       });
     }
-    var completeDays = List<int>();
+    var completeDays = <int>[];
     if (json["completeDays"] != null) {
       var daysJson = jsonDecode(json["completeDays"]);
       daysJson.forEach((json) {
@@ -132,19 +127,19 @@ class Habit extends Equatable {
     }
 
     return Habit(
-        id: json["id"]?.toString(),
-        name: json["name"]?.toString(),
-        iconPath: json["iconPath"]?.toString(),
-        mainColor: json["mainColor"]?.toInt(),
-        mark: json["mark"]?.toString(),
+        id: json["id"].toString(),
+        name: json["name"].toString(),
+        iconPath: json["iconPath"].toString(),
+        mainColor: json["mainColor"].toInt(),
+        mark: json["mark"].toString(),
         remindTimes: remindTimes,
         completeDays: completeDays,
-        completeTime: json['completeTime']?.toInt(),
-        period: json["period"]?.toInt(),
-        createTime: json["createTime"]?.toInt(),
-        modifyTime: json["modifyTime"]?.toInt(),
-        completed: json["completed"]?.toInt() == 1 ? true : false,
-        doNum: json["doNum"]?.toInt(),
+        completeTime: json['completeTime'].toInt(),
+        period: json["period"].toInt(),
+        createTime: json["createTime"].toInt(),
+        modifyTime: json["modifyTime"].toInt(),
+        completed: json["completed"].toInt() == 1 ? true : false,
+        doNum: json["doNum"].toInt(),
         records: records);
   }
 
@@ -158,7 +153,7 @@ class Habit extends Equatable {
     //转化为String 存储
     if (remindTimes != null) {
       var times = remindTimes;
-      var temp = List();
+      var temp = [];
       times.forEach((time) {
         temp.add(time);
       });
@@ -166,7 +161,7 @@ class Habit extends Equatable {
     }
     if (completeDays != null) {
       var days = completeDays;
-      var temp = List();
+      var temp = [];
       days.forEach((day) {
         temp.add(day);
       });
@@ -217,22 +212,22 @@ class Habit extends Equatable {
       ];
 
   Habit copyWith(
-      {String objectId,
-      String id,
-      String name,
-      String iconPath,
-      int mainColor,
-      String mark,
-      List<String> remindTimes,
-      List<int> completeDays,
-      int completeTime,
-      int period,
-      int createTime,
-      int modifyTime,
-      bool completed,
-      int doNum,
-      List<HabitRecord> records,
-      String userId}) {
+      {String? objectId,
+      String? id,
+      String? name,
+      String? iconPath,
+      int? mainColor,
+      String? mark,
+      List<String>? remindTimes,
+      List<int>? completeDays,
+      int? completeTime,
+      int? period,
+      int? createTime,
+      int? modifyTime,
+      bool? completed,
+      int? doNum,
+      List<HabitRecord>? records,
+      String? userId}) {
     return Habit(
         id: id ?? this.id,
         name: name ?? this.name,

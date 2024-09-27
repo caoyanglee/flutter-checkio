@@ -13,7 +13,7 @@ class TimeAndWordView extends StatelessWidget {
   final AnimationController animationController;
   final Animation<Offset> animation;
 
-  const TimeAndWordView({Key key, this.animationController, this.animation})
+  const TimeAndWordView({Key? key, required this.animationController, required this.animation})
       : super(key: key);
 
   @override
@@ -67,7 +67,7 @@ class OneDayTipsView extends StatelessWidget {
   final int habitLength;
 
   const OneDayTipsView(
-      {Key key, this.animationController, this.animation, this.habitLength})
+      {Key? key, required this.animationController, required this.animation, required this.habitLength})
       : super(key: key);
 
   @override

@@ -94,9 +94,9 @@ typedef OnTap = void Function(AppThemeColorMode colorMode);
 class ThemeColorView extends StatefulWidget {
   final AppThemeColorMode currentColorMode;
 
-  final OnTap onTap;
+  final OnTap? onTap;
 
-  const ThemeColorView({Key key, this.currentColorMode, this.onTap})
+  const ThemeColorView({Key? key, required this.currentColorMode, this.onTap})
       : super(key: key);
 
   @override
@@ -111,7 +111,7 @@ class _ThemeColorViewState extends State<ThemeColorView> {
   ///每一个Item占据的空间
   double viewPortFraction = 1 / 3;
 
-  PageController pageController;
+  late PageController pageController;
 
   ///中间的为目标
   double scrollPageIndex = 1.0;
@@ -156,7 +156,7 @@ class _ThemeColorViewState extends State<ThemeColorView> {
         onNotification: (ScrollNotification notification) {
           if (notification is ScrollUpdateNotification) {
             setState(() {
-              scrollPageIndex = pageController.page;
+              scrollPageIndex = pageController.page??0;
             });
             return true;
           }
@@ -190,7 +190,7 @@ class _ThemeColorViewState extends State<ThemeColorView> {
         width: pageHeight * scale,
         child: GestureDetector(
           onTap: () {
-            widget.onTap(colorMode);
+            widget.onTap?.call(colorMode);
             scrollToIndex(colorMode);
           },
           child: Card(

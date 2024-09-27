@@ -4,9 +4,9 @@ import 'package:timefly/db/database_provider.dart';
 import 'package:timefly/models/habit.dart';
 
 class AllHabitListView extends StatefulWidget {
-  final List<Habit> habits;
+  final List<Habit?> habits;
 
-  const AllHabitListView({Key key, this.habits}) : super(key: key);
+  const AllHabitListView({Key? key, required this.habits}) : super(key: key);
 
   @override
   _AllHabitListViewState createState() => _AllHabitListViewState();
@@ -16,7 +16,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
     with AutomaticKeepAliveClientMixin {
   final ScrollController scrollController = ScrollController();
 
-  Habit _selectedHabit;
+  Habit? _selectedHabit;
 
   double _listPadding = 16;
 
@@ -39,7 +39,7 @@ class _AllHabitListViewState extends State<AllHabitListView>
                   vertical: _listPadding / 2,
                 ),
                 child: AllHabitItemView(
-                  habit: widget.habits[index],
+                  habit: widget.habits[index]!,
                   isOpen: widget.habits[index] == _selectedHabit,
                   onTap: _handleHabitTapped,
                 ),

@@ -15,7 +15,7 @@ class HabitBaseInfoView extends StatelessWidget {
   final AnimationController animationController;
   final Habit habit;
 
-  const HabitBaseInfoView({Key key, this.habit, this.animationController})
+  const HabitBaseInfoView({Key? key, required this.habit, required this.animationController})
       : super(key: key);
 
   @override
@@ -180,7 +180,7 @@ class HabitCompleteRateView extends StatefulWidget {
   final AnimationController animationController;
   final Habit habit;
 
-  const HabitCompleteRateView({Key key, this.habit, this.animationController})
+  const HabitCompleteRateView({Key? key, required this.habit, required this.animationController})
       : super(key: key);
 
   @override
@@ -441,7 +441,7 @@ class HabitMonthInfoView extends StatefulWidget {
   final AnimationController animationController;
   final Habit habit;
 
-  const HabitMonthInfoView({Key key, this.animationController, this.habit})
+  const HabitMonthInfoView({Key? key, required this.animationController, required this.habit})
       : super(key: key);
 
   @override
@@ -455,9 +455,9 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView>
   final double margin = 20;
   final double ratio = 1.5;
   final double calendarPadding = 16;
-  PageController pageController;
+  late PageController pageController;
   List<DateTime> months = DateUtil.getMonthsSince2020();
-  int currentIndex;
+  int currentIndex=0;
 
   @override
   void initState() {
@@ -511,7 +511,7 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView>
                     });
                   },
                   itemBuilder: (context, index) {
-                    List<DateTime> days = DateUtil.getMonthDays(months[index]);
+                    List<DateTime?> days = DateUtil.getMonthDays(months[index]);
                     Map<String, List<HabitRecord>> records =
                         HabitUtil.combinationRecordsWithTime(
                             widget.habit.records,
@@ -615,7 +615,7 @@ class HabitMonthInfoViewState extends State<HabitMonthInfoView>
           style: AppTheme.appTheme
               .headline1(fontWeight: FontWeight.w300, fontSize: 14));
     }
-    int needDoNum;
+    int needDoNum=0;
     if (widget.habit.period == HabitPeriod.day) {
       int dayNum = DateTime(month.year, month.month + 1, 0).day;
       dayNum = List.generate(
@@ -685,7 +685,7 @@ class HabitCheckInfoView extends StatelessWidget {
   final AnimationController animationController;
   final Habit habit;
 
-  const HabitCheckInfoView({Key key, this.habit, this.animationController})
+  const HabitCheckInfoView({Key? key, required this.habit, required this.animationController})
       : super(key: key);
 
   @override
@@ -796,7 +796,7 @@ class HabitStreakInfoView extends StatelessWidget {
   final Habit habit;
   final AnimationController animationController;
 
-  const HabitStreakInfoView({Key key, this.habit, this.animationController})
+  const HabitStreakInfoView({Key? key, required this.habit, required this.animationController})
       : super(key: key);
 
   @override
@@ -806,7 +806,7 @@ class HabitStreakInfoView extends StatelessWidget {
     Map<String, int> streaks = HabitUtil.getHabitStreaks(records);
     int maxCount = 0;
     if (streaks.length > 0) {
-      maxCount = streaks[streaks.keys.first];
+      maxCount = streaks[streaks.keys.first]!;
     }
     return SlideTransition(
         position: Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero)
@@ -855,7 +855,7 @@ class HabitStreakInfoView extends StatelessWidget {
                     : Column(
                         children: streaks.keys
                             .take(5)
-                            .map((e) => _checkInfo(e, streaks[e], maxCount))
+                            .map((e) => _checkInfo(e, streaks[e]!, maxCount!))
                             .toList(),
                       ),
               ],
@@ -930,7 +930,7 @@ class HabitStreakInfoView extends StatelessWidget {
 class HabitRecentRecordsView extends StatelessWidget {
   final Habit habit;
 
-  const HabitRecentRecordsView({Key key, this.habit}) : super(key: key);
+  const HabitRecentRecordsView({Key? key, required this.habit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

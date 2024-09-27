@@ -21,7 +21,7 @@ class HabitProgressScreen extends StatefulWidget {
 
 class _HabitProgressScreenState extends State<HabitProgressScreen>
     with TickerProviderStateMixin {
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {
@@ -107,7 +107,7 @@ class _HabitProgressScreenState extends State<HabitProgressScreen>
 class TotalCheckAndDaysView extends StatelessWidget {
   final List<Habit> habits;
 
-  const TotalCheckAndDaysView({Key key, this.habits}) : super(key: key);
+  const TotalCheckAndDaysView({Key? key, required this.habits}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +187,7 @@ class TotalCheckAndDaysView extends StatelessWidget {
 class MostChecksView extends StatelessWidget {
   final List<Habit> habits;
 
-  const MostChecksView({Key key, this.habits}) : super(key: key);
+  const MostChecksView({Key? key, required this.habits}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -249,7 +249,7 @@ class MostChecksView extends StatelessWidget {
 class MostStreaksView extends StatelessWidget {
   final List<Habit> habits;
 
-  const MostStreaksView({Key key, this.habits}) : super(key: key);
+  const MostStreaksView({Key? key, required this.habits}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -312,7 +312,7 @@ class MostStreaksView extends StatelessWidget {
 class HabitItemView extends StatelessWidget {
   final Habit habit;
 
-  const HabitItemView({Key key, this.habit}) : super(key: key);
+  const HabitItemView({Key? key, required this.habit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

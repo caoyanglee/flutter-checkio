@@ -11,13 +11,13 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/models/user.dart';
 
 class UserInfoView extends StatelessWidget {
-  final VoidCallback callback;
+  final VoidCallback? callback;
 
-  const UserInfoView({Key key, this.callback}) : super(key: key);
+  const UserInfoView({Key? key, this.callback}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    User user = SessionUtils.sharedInstance().currentUser;
+    User? user = SessionUtils.sharedInstance().currentUser;
     return Container(
       margin: EdgeInsets.only(
           left: 16, top: MediaQuery.of(context).padding.top + 16),
@@ -50,7 +50,7 @@ class UserInfoView extends StatelessWidget {
                     .push(CupertinoPageRoute(builder: (context) {
                   return SettingsScreen();
                 }));
-                callback();
+                callback?.call();
               }
             },
             child: Text(
@@ -246,8 +246,8 @@ class EnterView extends StatelessWidget {
     );
   }
 
-  Widget _item(String iconPath, String text, Function onTap,
-      {BoxDecoration decoration, bool colored = false}) {
+  Widget _item(String iconPath, String text, GestureTapCallback? onTap,
+      {BoxDecoration? decoration, bool colored = false}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

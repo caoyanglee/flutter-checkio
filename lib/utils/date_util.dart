@@ -37,7 +37,7 @@ class DateUtil {
       int today = now.weekday;
       for (int i = 1; i < today - 1; i++) {
         DateTime oldDay = now - i.days;
-        List<HabitRecord> checks =
+        List<HabitRecord>? checks =
             totalCheck['${oldDay.year}-${oldDay.month}-${oldDay.day}'];
         if (checks != null) {
           num += checks.length;
@@ -70,7 +70,7 @@ class DateUtil {
       int today = now.day;
       for (int i = 1; i < today; i++) {
         DateTime oldDay = DateTime(now.year, now.month, i);
-        List<HabitRecord> checks =
+        List<HabitRecord>? checks =
             totalCheck['${oldDay.year}-${oldDay.month}-${oldDay.day}'];
         if (checks != null) {
           num += checks.length;
@@ -84,8 +84,8 @@ class DateUtil {
   }
 
   /// thisMonth 2020 10 1
-  static List<DateTime> getMonthDays(DateTime thisMonth) {
-    List<DateTime> days = [];
+  static List<DateTime?> getMonthDays(DateTime thisMonth) {
+    List<DateTime?> days = [];
 
     ///前7个为 一 ---> 日
     for (int i = 0; i < 7; i++) {
@@ -107,7 +107,7 @@ class DateUtil {
     }
 
     ///当月最后一天为周几 eg 7
-    int lastDayWeekDay = days.last.weekday;
+    int lastDayWeekDay = days.last!.weekday;
 
     ///若当月最后一天不是周日，则需向后补天数到周日
     if (lastDayWeekDay < DateTime.sunday) {

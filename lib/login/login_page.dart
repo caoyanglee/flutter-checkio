@@ -16,13 +16,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   String phone = '';
   String code = '';
   String sendText = 'Send';
 
-  Timer timer;
+  Timer? timer;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage>
   void dispose() {
     _animationController.dispose();
     if (timer != null) {
-      timer.cancel();
+      timer?.cancel();
     }
     super.dispose();
   }
@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage>
                       if (!hasPhone()) {
                         return;
                       }
-                      if (timer != null && timer.isActive) {
+                      if (timer != null && timer?.isActive==true) {
                         return;
                       }
                       Future.delayed(Duration(seconds: 2), () {

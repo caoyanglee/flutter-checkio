@@ -163,7 +163,7 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
       CompleteTime completeTime = CompleteTime(habit.completeTime);
       times.firstWhere((time) => time.time == habit.completeTime, orElse: () {
         times.add(completeTime);
-        return null;
+        return completeTime;
       });
     });
     times.sort((a, b) => a.time - b.time);

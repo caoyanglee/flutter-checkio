@@ -1,5 +1,5 @@
-import 'package:alarm_plugin/alarm_event.dart';
-import 'package:alarm_plugin/alarm_plugin.dart';
+// import 'package:alarm_plugin/alarm_event.dart';
+// import 'package:alarm_plugin/alarm_plugin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,13 +10,13 @@ import 'package:timefly/models/habit.dart';
 import 'package:timefly/utils/flash_helper.dart';
 
 class ModifyChangeDialog extends StatefulWidget {
-  final String title;
-  final String subTitle;
+  final String? title;
+  final String? subTitle;
 
   const ModifyChangeDialog({
-    Key key,
-    this.title,
-    this.subTitle,
+    Key? key,
+     this.title,
+     this.subTitle,
   }) : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class ModifyChangeDialog extends StatefulWidget {
 
 class _ModifyChangeDialogState extends State<ModifyChangeDialog>
     with SingleTickerProviderStateMixin {
-  AnimationController animationController;
+  late AnimationController animationController;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _ModifyChangeDialogState extends State<ModifyChangeDialog>
                 height: 8,
               ),
               Text(
-                widget.title,
+                widget.title??"",
                 style: AppTheme.appTheme
                     .headline1(fontWeight: FontWeight.bold, fontSize: 20)
                     .copyWith(decoration: TextDecoration.none),
@@ -66,7 +66,7 @@ class _ModifyChangeDialogState extends State<ModifyChangeDialog>
                 height: 8,
               ),
               Text(
-                widget.subTitle,
+                widget.subTitle??"",
                 style: AppTheme.appTheme
                     .headline1(fontWeight: FontWeight.normal, fontSize: 16)
                     .copyWith(decoration: TextDecoration.none),

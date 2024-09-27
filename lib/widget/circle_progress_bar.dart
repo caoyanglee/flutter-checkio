@@ -4,19 +4,19 @@ import 'package:flutter/widgets.dart';
 
 /// Draws a circular animated progress bar.
 class CircleProgressBar extends StatefulWidget {
-  final Duration animationDuration;
+  final Duration? animationDuration;
   final Color backgroundColor;
   final Color foregroundColor;
   final double value;
-  final double strokeWidth;
+  final double? strokeWidth;
 
   const CircleProgressBar({
-    Key key,
+    Key? key,
     this.animationDuration,
-    this.backgroundColor,
+    required this.backgroundColor,
     this.strokeWidth,
-    @required this.foregroundColor,
-    @required this.value,
+    required this.foregroundColor,
+    required this.value,
   }) : super(key: key);
 
   @override
@@ -25,16 +25,15 @@ class CircleProgressBar extends StatefulWidget {
   }
 }
 
-class CircleProgressBarState extends State<CircleProgressBar>
-    with SingleTickerProviderStateMixin {
+class CircleProgressBarState extends State<CircleProgressBar> with SingleTickerProviderStateMixin {
   // Used in tweens where a backgroundColor isn't given.
   static const TRANSPARENT = Color(0x00000000);
-  AnimationController _controller;
+  late AnimationController _controller;
 
-  Animation<double> curve;
-  Tween<double> valueTween;
-  Tween<Color> backgroundColorTween;
-  Tween<Color> foregroundColorTween;
+  late Animation<double> curve;
+  late Tween<double> valueTween;
+  Tween<Color?>? backgroundColorTween;
+  Tween<Color?>? foregroundColorTween;
 
   @override
   void initState() {
@@ -66,8 +65,7 @@ class CircleProgressBarState extends State<CircleProgressBar>
     if (this.widget.value != oldWidget.value) {
       // Try to start with the previous tween's end value. This ensures that we
       // have a smooth transition from where the previous animation reached.
-      double beginValue =
-          this.valueTween?.evaluate(this.curve) ?? oldWidget?.value ?? 0;
+      double beginValue = this.valueTween?.evaluate(this.curve) ?? oldWidget?.value ?? 0;
 
       // Update the value tween.
       this.valueTween = Tween<double>(
@@ -115,20 +113,17 @@ class CircleProgressBarState extends State<CircleProgressBar>
         child: Container(),
         builder: (context, child) {
           final backgroundColor =
-              this.backgroundColorTween?.evaluate(this.curve) ??
-                  this.widget.backgroundColor;
+              this.backgroundColorTween?.evaluate(this.curve) ?? this.widget.backgroundColor;
           final foregroundColor =
-              this.foregroundColorTween?.evaluate(this.curve) ??
-                  this.widget.foregroundColor;
+              this.foregroundColorTween?.evaluate(this.curve) ?? this.widget.foregroundColor;
 
           return CustomPaint(
             child: child,
             foregroundPainter: CircleProgressBarPainter(
-              backgroundColor: backgroundColor,
-              foregroundColor: foregroundColor,
-              percentage: this.valueTween.evaluate(this.curve),
-              strokeWidth: widget.strokeWidth
-            ),
+                backgroundColor: backgroundColor,
+                foregroundColor: foregroundColor,
+                percentage: this.valueTween.evaluate(this.curve),
+                strokeWidth: widget.strokeWidth),
           );
         },
       ),
@@ -144,19 +139,18 @@ class CircleProgressBarPainter extends CustomPainter {
   final Color foregroundColor;
 
   CircleProgressBarPainter({
-    this.backgroundColor,
-    @required this.foregroundColor,
-    @required this.percentage,
-    double strokeWidth,
+    required this.backgroundColor,
+    required this.foregroundColor,
+    required this.percentage,
+    double? strokeWidth,
   }) : this.strokeWidth = strokeWidth ?? 4;
 
   @override
   void paint(Canvas canvas, Size size) {
     final Offset center = size.center(Offset.zero);
     final Size constrainedSize =
-        size - Offset(this.strokeWidth, this.strokeWidth);
-    final shortestSide =
-        Math.min(constrainedSize.width, constrainedSize.height);
+        Size(size.width - this.strokeWidth, size.height - this.strokeWidth);
+    final shortestSide = Math.min(constrainedSize.width, constrainedSize.height);
     final foregroundPaint = Paint()
       ..color = this.foregroundColor
       ..strokeWidth = this.strokeWidth

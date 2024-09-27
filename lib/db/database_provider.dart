@@ -11,16 +11,16 @@ class DatabaseProvider {
   static const String RECORDS = 'records';
 
   ///my database
-  Database _database;
+  Database? _database = null;
 
   Future<Database> get database async {
     if (_database != null) {
-      return _database;
+      return _database!;
     }
 
     _database = await createDatabase();
 
-    return _database;
+    return _database!;
   }
 
   Future<Database> createDatabase() async {
@@ -63,7 +63,7 @@ class DatabaseProvider {
     );
   }
 
-  Future<User> getCurrentUser() async {
+  Future<User?> getCurrentUser() async {
     final db = await database;
     var users = await db.query("user");
     if (users.isEmpty) {
@@ -88,8 +88,7 @@ class DatabaseProvider {
 
   Future<bool> updateUser(User user) async {
     final db = await database;
-    int change = await db
-        .update('user', user.toJson(), where: 'id = ?', whereArgs: [user.id]);
+    int change = await db.update('user', user.toJson(), where: 'id = ?', whereArgs: [user.id]);
     return change > 0;
   }
 
@@ -99,7 +98,7 @@ class DatabaseProvider {
     List<Habit> newHabitList = [];
 
     for (Map<String, dynamic> element in habits) {
-      final habitId = element["id"]?.toString();
+      final habitId = element["id"].toString();
       var records = await getHabitRecords(habitId);
       Habit habit = Habit.fromJson(element, records: records);
       newHabitList.add(habit);
@@ -115,7 +114,7 @@ class DatabaseProvider {
     List<Habit> newHabitList = [];
 
     for (Map<String, dynamic> element in habits) {
-      final habitId = element["id"]?.toString();
+      final habitId = element["id"].toString();
       var records = await getHabitRecords(habitId);
       Habit habit = Habit.fromJson(element, records: records);
       newHabitList.add(habit);
@@ -126,8 +125,7 @@ class DatabaseProvider {
 
   Future<List<Habit>> getHabitsWithCompleteTime(int completeTime) async {
     final db = await database;
-    var habits = await db
-        .query('habits', where: 'completeTime = ?', whereArgs: [completeTime]);
+    var habits = await db.query('habits', where: 'completeTime = ?', whereArgs: [completeTime]);
     List<Habit> newHabitList = [];
     habits.forEach((element) {
       newHabitList.add(Habit.fromJson(element));
@@ -138,10 +136,9 @@ class DatabaseProvider {
 
   /// 根据 habitId和时间范围筛选出符合条件的记录
   Future<List<HabitRecord>> getHabitRecords(String habitId,
-      {DateTime start, DateTime end}) async {
+      {DateTime? start, DateTime? end}) async {
     final db = await database;
-    var records = List.from(
-        await db.query(RECORDS, where: 'habitId = ?', whereArgs: [habitId]));
+    var records = List.from(await db.query(RECORDS, where: 'habitId = ?', whereArgs: [habitId]));
     List<HabitRecord> habitRecords = [];
     if (records != null && records.length > 0) {
       if (start != null && end != null) {
@@ -164,15 +161,13 @@ class DatabaseProvider {
   ///获取天数分类习惯个数，用于’我的一天‘页面分类
   Future<int> getPeriodHabitsSize(int period) async {
     final db = await database;
-    var habits =
-        await db.query('habits', where: 'period = ?', whereArgs: [period]);
+    var habits = await db.query('habits', where: 'period = ?', whereArgs: [period]);
     return habits.length;
   }
 
-  Future<Habit> insert(Habit habit) async {
+  Future<Habit?> insert(Habit habit) async {
     final db = await database;
-    var queryHabits =
-        await db.query('habits', where: 'id = ?', whereArgs: [habit.id]);
+    var queryHabits = await db.query('habits', where: 'id = ?', whereArgs: [habit.id]);
     bool exist = false;
     queryHabits.forEach((element) {
       if (element['id'] == habit.id) {
@@ -195,23 +190,22 @@ class DatabaseProvider {
 
   Future<bool> deleteHabitRecord(String habitId, int time) async {
     final db = await database;
-    int index = await db.delete(RECORDS,
-        where: 'habitId = ? and time = ?', whereArgs: [habitId, time]);
+    int index =
+        await db.delete(RECORDS, where: 'habitId = ? and time = ?', whereArgs: [habitId, time]);
     return index > 0;
   }
 
   Future<bool> updateHabitRecord(HabitRecord habitRecord) async {
     final db = await database;
-    int change = await db.update(RECORDS, habitRecord.toJson(),
-        where: 'time = ?', whereArgs: [habitRecord.time]);
+    int change = await db
+        .update(RECORDS, habitRecord.toJson(), where: 'time = ?', whereArgs: [habitRecord.time]);
     return change > 0;
   }
 
   ///更新
   Future<bool> update(Habit habit) async {
     final db = await database;
-    int change = await db.update('habits', habit.toJson(),
-        where: 'id = ?', whereArgs: [habit.id]);
+    int change = await db.update('habits', habit.toJson(), where: 'id = ?', whereArgs: [habit.id]);
     return change > 0;
   }
 }

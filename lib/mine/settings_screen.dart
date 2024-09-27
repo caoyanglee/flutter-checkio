@@ -38,8 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 ListView(physics: ClampingScrollPhysics(), children: [
                   Container(
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top, right: 24),
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top, right: 24),
                     alignment: Alignment.topRight,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -63,10 +62,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ThemeColorView(
                     currentColorMode: appThemeColorMode,
                     onTap: (colorMode) async {
-                      BlocProvider.of<ThemeBloc>(context).add(ThemeChangeEvent(
-                          appThemeMode, colorMode, appFontMode));
-                      SharedPreferences shared =
-                          await SharedPreferences.getInstance();
+                      BlocProvider.of<ThemeBloc>(context)
+                          .add(ThemeChangeEvent(appThemeMode, colorMode, appFontMode));
+                      SharedPreferences shared = await SharedPreferences.getInstance();
                       shared.setString(COLOR_MODE, colorMode.toString());
                     },
                   ),
@@ -77,8 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      margin: EdgeInsets.only(
-                          left: 32, right: 32, top: 48, bottom: 32),
+                      margin: EdgeInsets.only(left: 32, right: 32, top: 48, bottom: 32),
                       height: 55,
                       width: 220,
                       decoration: BoxDecoration(
@@ -88,9 +85,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Text(
                         '退出',
                         style: AppTheme.appTheme.headline1(
-                            textColor: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600),
+                            textColor: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -104,8 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                   child: Container(
                     alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top + 26),
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 26),
                     height: 45,
                     child: Container(
                       alignment: Alignment.center,
@@ -113,8 +107,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(26),
-                              bottomRight: Radius.circular(26)),
+                              topRight: Radius.circular(26), bottomRight: Radius.circular(26)),
                           color: AppTheme.appTheme.cardBackgroundColor(),
                           boxShadow: AppTheme.appTheme.containerBoxShadow()),
                       child: SvgPicture.asset(
@@ -143,11 +136,11 @@ class ChangeUserInfoView extends StatefulWidget {
 }
 
 class _ChangeUserInfoViewState extends State<ChangeUserInfoView> {
-  String userName;
+  String userName = "";
 
   @override
   void initState() {
-    userName = SessionUtils.sharedInstance().currentUser.username;
+    userName = SessionUtils.sharedInstance().currentUser?.username ?? "";
     super.initState();
   }
 
@@ -169,10 +162,8 @@ class _ChangeUserInfoViewState extends State<ChangeUserInfoView> {
             inputType: TextInputType.name,
             initValue: userName,
             hintText: '名字',
-            hintTextStyle: AppTheme.appTheme
-                .hint(fontWeight: FontWeight.bold, fontSize: 18),
-            textStyle: AppTheme.appTheme
-                .headline1(fontWeight: FontWeight.bold, fontSize: 18),
+            hintTextStyle: AppTheme.appTheme.hint(fontWeight: FontWeight.bold, fontSize: 18),
+            textStyle: AppTheme.appTheme.headline1(fontWeight: FontWeight.bold, fontSize: 18),
             containerDecoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -182,8 +173,7 @@ class _ChangeUserInfoViewState extends State<ChangeUserInfoView> {
                 color: AppTheme.appTheme.cardBackgroundColor(),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 boxShadow: AppTheme.appTheme.containerBoxShadow()),
-            numTextStyle: AppTheme.appTheme
-                .themeText(fontWeight: FontWeight.bold, fontSize: 15),
+            numTextStyle: AppTheme.appTheme.themeText(fontWeight: FontWeight.bold, fontSize: 15),
             onValueChanged: (value) {
               userName = value;
             },
@@ -210,7 +200,7 @@ class _ChangeUserInfoViewState extends State<ChangeUserInfoView> {
                 color: AppTheme.appTheme.containerBackgroundColor()),
             height: 65,
             child: Text(
-              SessionUtils.sharedInstance().currentUser.phone,
+              SessionUtils.sharedInstance().currentUser?.phone ?? "",
               style: AppTheme.appTheme.numHeadline1(
                   fontWeight: FontWeight.bold,
                   fontSize: 23,
@@ -230,7 +220,10 @@ class DarkModeView extends StatefulWidget {
   final AppFontMode appFontMode;
 
   const DarkModeView(
-      {Key key, this.appThemeMode, this.appThemeColorMode, this.appFontMode})
+      {Key? key,
+      required this.appThemeMode,
+      required this.appThemeColorMode,
+      required this.appFontMode})
       : super(key: key);
 
   @override
@@ -266,8 +259,7 @@ class _DarkModeViewState extends State<DarkModeView> {
             children: [
               Text(
                 '${checked ? '开' : '关'}',
-                style: AppTheme.appTheme
-                    .headline1(fontSize: 18, fontWeight: FontWeight.bold),
+                style: AppTheme.appTheme.headline1(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 6,
@@ -277,8 +269,7 @@ class _DarkModeViewState extends State<DarkModeView> {
                 style: AppTheme.appTheme.headline1(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    textColor:
-                        AppTheme.appTheme.normalColor().withOpacity(0.5)),
+                    textColor: AppTheme.appTheme.normalColor().withOpacity(0.5)),
               )
             ],
           ),
@@ -287,20 +278,16 @@ class _DarkModeViewState extends State<DarkModeView> {
               value: checked,
               activeColor: AppTheme.appTheme.grandientColorStart(),
               onChanged: (value) async {
-                SharedPreferences shared =
-                    await SharedPreferences.getInstance();
+                SharedPreferences shared = await SharedPreferences.getInstance();
                 setState(() {
-                  checked = value;
+                  checked = value ?? false;
                   BlocProvider.of<ThemeBloc>(context).add(ThemeChangeEvent(
                       checked ? AppThemeMode.Dark : AppThemeMode.Light,
                       widget.appThemeColorMode,
                       widget.appFontMode));
 
-                  shared.setString(
-                      THEME_MODE,
-                      checked
-                          ? AppThemeMode.Dark.toString()
-                          : AppThemeMode.Light.toString());
+                  shared.setString(THEME_MODE,
+                      checked ? AppThemeMode.Dark.toString() : AppThemeMode.Light.toString());
                 });
               })
         ],

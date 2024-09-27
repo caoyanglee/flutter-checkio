@@ -8,8 +8,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ThemeBloc()
       : super(ThemeState(
             AppThemeMode.Light, AppThemeColorMode.Blue, AppFontMode.Roboto)) {
-    AppTheme.appTheme
-        .setThemeState(state.themeMode, state.themeColorMode, state.fontMode);
+    AppTheme.appTheme.setThemeState(state.themeMode, state.themeColorMode, state.fontMode);
   }
 
   @override
