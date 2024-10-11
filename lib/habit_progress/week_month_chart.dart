@@ -101,15 +101,15 @@ class _WeekMonthChartState extends State<WeekMonthChart> with TickerProviderStat
               padding: EdgeInsets.only(left: 32, right: 32),
               width: MediaQuery.of(context).size.width,
               height: 230,
-              // child: currentChart == 0
-              //     ? BarChart(
-              //         weekBarData(),
-              //         swapAnimationDuration: Duration(milliseconds: 250),
-              //       )
-              //     : LineChart(
-              //         monthLineData(),
-              //         duration: Duration(milliseconds: 250),
-              //       ),
+              child: currentChart == 0
+                  ? BarChart(
+                      weekBarData(),
+                      swapAnimationDuration: Duration(milliseconds: 250),
+                    )
+                  : LineChart(
+                      monthLineData(),
+                      duration: Duration(milliseconds: 250),
+                    ),
             ),
             SizedBox(
               height: 12,
@@ -274,288 +274,288 @@ class _WeekMonthChartState extends State<WeekMonthChart> with TickerProviderStat
     }
   }
 
-  // BarChartData weekBarData() {
-  //   Pair<DateTime> currentWeek = DateUtil.getWeekStartAndEnd(_now, currentWeekIndex);
-  //   Pair<DateTime> previousWeek = DateUtil.getWeekStartAndEnd(_now, currentWeekIndex + 1);
-  //
-  //   List<double> currentWeekNums = [];
-  //   for (int i = 0; i < 7; i++) {
-  //     currentWeekNums
-  //         .add(HabitUtil.getTotalDoNumsOfDay(widget.habits, currentWeek.x0 + i.days).toDouble());
-  //   }
-  //   List<double> previousWeekNums = [];
-  //   for (int i = 0; i < 7; i++) {
-  //     previousWeekNums
-  //         .add(HabitUtil.getTotalDoNumsOfDay(widget.habits, previousWeek.x0 + i.days).toDouble());
-  //   }
-  //   double maxY = 0;
-  //   currentWeekNums.forEach((num) {
-  //     if (num > maxY) {
-  //       maxY = num;
-  //     }
-  //   });
-  //   previousWeekNums.forEach((num) {
-  //     if (num > maxY) {
-  //       maxY = num;
-  //     }
-  //   });
-  //   return BarChartData(
-  //     maxY: maxY >= 5 ? maxY * 1.3 : 5,
-  //     barTouchData: BarTouchData(
-  //       touchTooltipData: BarTouchTooltipData(
-  //           fitInsideHorizontally: true,
-  //           fitInsideVertically: true,
-  //           tooltipRoundedRadius: 16,
-  //           tooltipPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-  //           tooltipBgColor: AppTheme.appTheme.cardBackgroundColor(),
-  //           getTooltipItem: (group, groupIndex, rod, rodIndex) {
-  //             return BarTooltipItem(
-  //                 (rod.y - 1).toInt().toString(),
-  //                 AppTheme.appTheme.numHeadline1(
-  //                   fontSize: 20,
-  //                   fontWeight: FontWeight.bold,
-  //                 ));
-  //           }),
-  //       touchCallback: (event, barTouchResponse) {
-  //         setState(() {
-  //           if (barTouchResponse?.spot != null) {
-  //             touchedIndex = barTouchResponse?.spot?.touchedBarGroupIndex ?? 0;
-  //           } else {
-  //             touchedIndex = -1;
-  //           }
-  //         });
-  //       },
-  //     ),
-  //     titlesData: FlTitlesData(
-  //         show: true,
-  //         bottomTitles: SideTitles(
-  //           showTitles: true,
-  //           getTextStyles: (context, value) => AppTheme.appTheme
-  //               .headline1(textColor: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-  //           margin: 16,
-  //           getTitles: (double value) {
-  //             return CompleteDay.getSimpleDay(value.toInt() + 1);
-  //           },
-  //         ),
-  //         leftTitles: SideTitles(showTitles: false),
-  //         topTitles: SideTitles(showTitles: false),
-  //         rightTitles: SideTitles(showTitles: false)),
-  //     borderData: FlBorderData(
-  //       show: false,
-  //     ),
-  //     gridData: FlGridData(show: false),
-  //     barGroups: showingGroups(currentWeekNums, previousWeekNums, maxY),
-  //   );
-  // }
+  BarChartData weekBarData() {
+    Pair<DateTime> currentWeek = DateUtil.getWeekStartAndEnd(_now, currentWeekIndex);
+    Pair<DateTime> previousWeek = DateUtil.getWeekStartAndEnd(_now, currentWeekIndex + 1);
 
-  // List<BarChartGroupData> showingGroups(
-  //         List<double> currentWeekNums, List<double> previousWeekNums, double maxY) =>
-  //     List.generate(7, (i) {
-  //       return makeGroupData(i, currentWeekNums[i], previousWeekNums[i],
-  //           isTouched: i == touchedIndex);
-  //     });
+    List<double> currentWeekNums = [];
+    for (int i = 0; i < 7; i++) {
+      currentWeekNums
+          .add(HabitUtil.getTotalDoNumsOfDay(widget.habits, currentWeek.x0 + i.days).toDouble());
+    }
+    List<double> previousWeekNums = [];
+    for (int i = 0; i < 7; i++) {
+      previousWeekNums
+          .add(HabitUtil.getTotalDoNumsOfDay(widget.habits, previousWeek.x0 + i.days).toDouble());
+    }
+    double maxY = 0;
+    currentWeekNums.forEach((num) {
+      if (num > maxY) {
+        maxY = num;
+      }
+    });
+    previousWeekNums.forEach((num) {
+      if (num > maxY) {
+        maxY = num;
+      }
+    });
+    return BarChartData(
+      maxY: maxY >= 5 ? maxY * 1.3 : 5,
+      barTouchData: BarTouchData(
+        touchTooltipData: BarTouchTooltipData(
+            fitInsideHorizontally: true,
+            fitInsideVertically: true,
+            tooltipRoundedRadius: 16,
+            tooltipPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            // tooltipBgColor: AppTheme.appTheme.cardBackgroundColor(),
+            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+              return BarTooltipItem(
+                  (rod.toY - 1).toInt().toString(),
+                  AppTheme.appTheme.numHeadline1(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ));
+            }),
+        touchCallback: (event, barTouchResponse) {
+          setState(() {
+            if (barTouchResponse?.spot != null) {
+              touchedIndex = barTouchResponse?.spot?.touchedBarGroupIndex ?? 0;
+            } else {
+              touchedIndex = -1;
+            }
+          });
+        },
+      ),
+      titlesData: FlTitlesData(
+          show: true,
+          bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+            showTitles: true,
+            // getTextStyles: (context, value) => AppTheme.appTheme
+            //     .headline1(textColor: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+            // margin: 16,
+            // getTitles: (double value) {
+            //   return CompleteDay.getSimpleDay(value.toInt() + 1);
+            // },
+          )),
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))),
+      borderData: FlBorderData(
+        show: false,
+      ),
+      gridData: FlGridData(show: false),
+      barGroups: showingGroups(currentWeekNums, previousWeekNums, maxY),
+    );
+  }
 
-  // BarChartGroupData makeGroupData(
-  //   int x,
-  //   double currentY,
-  //   double previousY, {
-  //   bool isTouched = false,
-  //   double width = 12,
-  //   List<int> showTooltips = const [],
-  // }) {
-  //   return BarChartGroupData(
-  //     barsSpace: 6,
-  //     x: x,
-  //     barRods: [
-  //       BarChartRodData(
-  //         y: isTouched ? (currentY > 0 ? currentY + 1 : 1) : (currentY > 0 ? currentY : 1),
-  //         colors: [Colors.white],
-  //         width: width,
-  //         backDrawRodData: BackgroundBarChartRodData(
-  //           show: false,
-  //         ),
-  //       ),
-  //       BarChartRodData(
-  //         y: isTouched ? (previousY > 0 ? previousY + 1 : 1) : (previousY > 0 ? previousY : 1),
-  //         colors: [HexColor.darken(AppTheme.appTheme.grandientColorEnd(), darken)],
-  //         width: width,
-  //         backDrawRodData: BackgroundBarChartRodData(
-  //           show: false,
-  //         ),
-  //       )
-  //     ],
-  //     showingTooltipIndicators: showTooltips,
-  //   );
-  // }
+  List<BarChartGroupData> showingGroups(
+          List<double> currentWeekNums, List<double> previousWeekNums, double maxY) =>
+      List.generate(7, (i) {
+        return makeGroupData(i, currentWeekNums[i], previousWeekNums[i],
+            isTouched: i == touchedIndex);
+      });
 
-  /// month line chart
+  BarChartGroupData makeGroupData(
+    int x,
+    double currentY,
+    double previousY, {
+    bool isTouched = false,
+    double width = 12,
+    List<int> showTooltips = const [],
+  }) {
+    return BarChartGroupData(
+      barsSpace: 6,
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: isTouched ? (currentY > 0 ? currentY + 1 : 1) : (currentY > 0 ? currentY : 1),
+          color: Colors.white,
+          width: width,
+          backDrawRodData: BackgroundBarChartRodData(
+            show: false,
+          ),
+        ),
+        BarChartRodData(
+          toY: isTouched ? (previousY > 0 ? previousY + 1 : 1) : (previousY > 0 ? previousY : 1),
+          color: HexColor.darken(AppTheme.appTheme.grandientColorEnd(), darken),
+          width: width,
+          backDrawRodData: BackgroundBarChartRodData(
+            show: false,
+          ),
+        )
+      ],
+      showingTooltipIndicators: showTooltips,
+    );
+  }
 
-  // LineChartData monthLineData() {
-  //   Pair<DateTime> currentMonth = DateUtil.getMonthStartAndEnd(_now, currentMonthIndex);
-  //   Pair<DateTime> previousMonth = DateUtil.getMonthStartAndEnd(_now, currentMonthIndex + 1);
-  //
-  //   List<double> currentMonthNums = [];
-  //   for (int i = 0; i < (currentMonthIndex == 0 ? _now.day : currentMonth.x1.day); i++) {
-  //     currentMonthNums
-  //         .add(HabitUtil.getTotalDoNumsOfDay(widget.habits, currentMonth.x0 + i.days).toDouble());
-  //   }
-  //   List<double> previousMonthNums = [];
-  //   for (int i = 0; i < previousMonth.x1.day; i++) {
-  //     previousMonthNums
-  //         .add(HabitUtil.getTotalDoNumsOfDay(widget.habits, previousMonth.x0 + i.days).toDouble());
-  //   }
-  //   double maxY = 0;
-  //   currentMonthNums.forEach((num) {
-  //     if (num > maxY) {
-  //       maxY = num;
-  //     }
-  //   });
-  //   previousMonthNums.forEach((num) {
-  //     if (num > maxY) {
-  //       maxY = num;
-  //     }
-  //   });
-  //   return LineChartData(
-  //       gridData: FlGridData(show: false),
-  //       lineTouchData: LineTouchData(
-  //           handleBuiltInTouches: true,
-  //           getTouchedSpotIndicator: (bar, indexs) {
-  //             return indexs
-  //                 .map((e) => TouchedSpotIndicatorData(
-  //                     FlLine(color: Colors.transparent, strokeWidth: 2),
-  //                     FlDotData(
-  //                         show: true,
-  //                         getDotPainter:
-  //                             (FlSpot spot, double xPercentage, LineChartBarData bar, int index) {
-  //                           return FlDotCirclePainter(
-  //                               radius: 5.5,
-  //                               color: bar.colors[0].value == Colors.white.value
-  //                                   ? bar.colors[0]
-  //                                   : Colors.transparent,
-  //                               strokeColor: bar.colors[0].value == Colors.white.value
-  //                                   ? Colors.black12
-  //                                   : Colors.transparent,
-  //                               strokeWidth: 1);
-  //                         })))
-  //                 .toList();
-  //           },
-  //           touchTooltipData: LineTouchTooltipData(
-  //               tooltipPadding: EdgeInsets.all(8),
-  //               tooltipRoundedRadius: 16,
-  //               tooltipBgColor: AppTheme.appTheme.cardBackgroundColor(),
-  //               fitInsideVertically: true,
-  //               fitInsideHorizontally: true,
-  //               getTooltipItems: (spots) {
-  //                 return spots
-  //                     .map((spot) => (spot.barIndex == 1
-  //                         ? LineTooltipItem(
-  //                             '${(spot.y - 1).toInt()}\n${getMonthByIndex(spot.x.toInt())}',
-  //                             AppTheme.appTheme
-  //                                 .numHeadline1(fontSize: 20, fontWeight: FontWeight.bold))
-  //                         : null))
-  //                     .toList();
-  //               })),
-  //       titlesData: FlTitlesData(
-  //         show: true,
-  //         leftTitles: SideTitles(showTitles: false),
-  //         bottomTitles: SideTitles(
-  //             showTitles: true,
-  //             reservedSize: 22,
-  //             getTextStyles: (context, value) => AppTheme.appTheme.numHeadline1(
-  //                   textColor: Colors.white,
-  //                   fontWeight: FontWeight.bold,
-  //                   fontSize: 16,
-  //                 ),
-  //             margin: 20,
-  //             getTitles: (value) {
-  //               print(value);
-  //               switch (value.toInt()) {
-  //                 case 1:
-  //                   return '1';
-  //                 case 5:
-  //                   return '5';
-  //                 case 10:
-  //                   return '10';
-  //                 case 15:
-  //                   return '15';
-  //                 case 20:
-  //                   return '20';
-  //                 case 25:
-  //                   return '25';
-  //                 case 30:
-  //                   return '30';
-  //                 default:
-  //                   return '';
-  //               }
-  //             }),
-  //         rightTitles: SideTitles(showTitles: false),
-  //         topTitles: SideTitles(showTitles: false),
-  //       ),
-  //       borderData: FlBorderData(show: false),
-  //       lineBarsData: monthLines(currentMonthNums, previousMonthNums),
-  //       maxX: 31,
-  //       minX: 0,
-  //       minY: 1,
-  //       maxY: maxY >= 5 ? maxY * 1.3 : 5);
-  // }
+  // month line chart
 
-  // List<LineChartBarData> monthLines(List<double> currentMonthNums, List<double> previousMonthNums) {
-  //   List<FlSpot> currentMonthSpots = [];
-  //   for (int i = 0; i < currentMonthNums.length; i++) {
-  //     currentMonthSpots.add(FlSpot(i + 1.0, currentMonthNums[i] > 0 ? currentMonthNums[i] + 1 : 1));
-  //   }
-  //   List<FlSpot> previousMonthSpots = [];
-  //   for (int i = 0; i < previousMonthNums.length; i++) {
-  //     previousMonthSpots
-  //         .add(FlSpot(i + 1.0, previousMonthNums[i] > 0 ? previousMonthNums[i] + 1 : 1));
-  //   }
-  //   return [
-  //     LineChartBarData(
-  //       spots: previousMonthSpots,
-  //       curveSmoothness: .33,
-  //       isCurved: true,
-  //       colors: [
-  //         HexColor.darken(AppTheme.appTheme.grandientColorEnd(), darken),
-  //       ],
-  //       barWidth: 2,
-  //       isStrokeCapRound: true,
-  //       preventCurveOverShooting: true,
-  //       dotData: FlDotData(
-  //         show: false,
-  //       ),
-  //       belowBarData: BarAreaData(
-  //         show: false,
-  //       ),
-  //     ),
-  //     LineChartBarData(
-  //       spots: currentMonthSpots,
-  //       curveSmoothness: .33,
-  //       isCurved: true,
-  //       colors: [
-  //         Colors.white,
-  //       ],
-  //       barWidth: 2,
-  //       preventCurveOverShooting: true,
-  //       isStrokeCapRound: true,
-  //       dotData: FlDotData(
-  //           show: true,
-  //           getDotPainter: (FlSpot spot, double xPercentage, LineChartBarData bar, int index) {
-  //             return FlDotCirclePainter(
-  //                 radius: 2,
-  //                 color: bar.colors[0].value == Colors.white.value
-  //                     ? bar.colors[0]
-  //                     : Colors.transparent,
-  //                 strokeColor: bar.colors[0].value == Colors.white.value
-  //                     ? Colors.black12
-  //                     : Colors.transparent,
-  //                 strokeWidth: 0);
-  //           }),
-  //       belowBarData: BarAreaData(
-  //         show: false,
-  //       ),
-  //     ),
-  //   ];
-  // }
+  LineChartData monthLineData() {
+    Pair<DateTime> currentMonth = DateUtil.getMonthStartAndEnd(_now, currentMonthIndex);
+    Pair<DateTime> previousMonth = DateUtil.getMonthStartAndEnd(_now, currentMonthIndex + 1);
+
+    List<double> currentMonthNums = [];
+    for (int i = 0; i < (currentMonthIndex == 0 ? _now.day : currentMonth.x1.day); i++) {
+      currentMonthNums
+          .add(HabitUtil.getTotalDoNumsOfDay(widget.habits, currentMonth.x0 + i.days).toDouble());
+    }
+    List<double> previousMonthNums = [];
+    for (int i = 0; i < previousMonth.x1.day; i++) {
+      previousMonthNums
+          .add(HabitUtil.getTotalDoNumsOfDay(widget.habits, previousMonth.x0 + i.days).toDouble());
+    }
+    double maxY = 0;
+    currentMonthNums.forEach((num) {
+      if (num > maxY) {
+        maxY = num;
+      }
+    });
+    previousMonthNums.forEach((num) {
+      if (num > maxY) {
+        maxY = num;
+      }
+    });
+    return LineChartData(
+        gridData: FlGridData(show: false),
+        lineTouchData: LineTouchData(
+            handleBuiltInTouches: true,
+            getTouchedSpotIndicator: (bar, indexs) {
+              return indexs
+                  .map((e) => TouchedSpotIndicatorData(
+                      FlLine(color: Colors.transparent, strokeWidth: 2),
+                      FlDotData(
+                          show: true,
+                          getDotPainter:
+                              (FlSpot spot, double xPercentage, LineChartBarData bar, int index) {
+                            return FlDotCirclePainter(
+                                radius: 5.5,
+                                color: ((bar.color?.value) == (Colors.white.value))
+                                    ? bar.color!
+                                    : Colors.transparent,
+                                strokeColor: bar.color?.value == Colors.white.value
+                                    ? Colors.black12
+                                    : Colors.transparent,
+                                strokeWidth: 1);
+                          })))
+                  .toList();
+            },
+            touchTooltipData: LineTouchTooltipData(
+                tooltipPadding: EdgeInsets.all(8),
+                tooltipRoundedRadius: 16,
+                // tooltipBgColor: AppTheme.appTheme.cardBackgroundColor(),
+                fitInsideVertically: true,
+                fitInsideHorizontally: true,
+                getTooltipItems: (spots) {
+                  return spots
+                      .map((spot) => (spot.barIndex == 1
+                          ? LineTooltipItem(
+                              '${(spot.y - 1).toInt()}\n${getMonthByIndex(spot.x.toInt())}',
+                              AppTheme.appTheme
+                                  .numHeadline1(fontSize: 20, fontWeight: FontWeight.bold))
+                          : null))
+                      .toList();
+                })),
+        titlesData: FlTitlesData(
+          show: true,
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 22,
+                  // getTextStyles: (context, value) => AppTheme.appTheme.numHeadline1(
+                  //       textColor: Colors.white,
+                  //       fontWeight: FontWeight.bold,
+                  //       fontSize: 16,
+                  //     ),
+                  // margin: 20,
+                  // getTitles: (value) {
+                  //   print(value);
+                  //   switch (value.toInt()) {
+                  //     case 1:
+                  //       return '1';
+                  //     case 5:
+                  //       return '5';
+                  //     case 10:
+                  //       return '10';
+                  //     case 15:
+                  //       return '15';
+                  //     case 20:
+                  //       return '20';
+                  //     case 25:
+                  //       return '25';
+                  //     case 30:
+                  //       return '30';
+                  //     default:
+                  //       return '';
+                  //   }
+                  // }
+
+                  )),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        ),
+        borderData: FlBorderData(show: false),
+        lineBarsData: monthLines(currentMonthNums, previousMonthNums),
+        maxX: 31,
+        minX: 0,
+        minY: 1,
+        maxY: maxY >= 5 ? maxY * 1.3 : 5);
+  }
+
+  List<LineChartBarData> monthLines(List<double> currentMonthNums, List<double> previousMonthNums) {
+    List<FlSpot> currentMonthSpots = [];
+    for (int i = 0; i < currentMonthNums.length; i++) {
+      currentMonthSpots.add(FlSpot(i + 1.0, currentMonthNums[i] > 0 ? currentMonthNums[i] + 1 : 1));
+    }
+    List<FlSpot> previousMonthSpots = [];
+    for (int i = 0; i < previousMonthNums.length; i++) {
+      previousMonthSpots
+          .add(FlSpot(i + 1.0, previousMonthNums[i] > 0 ? previousMonthNums[i] + 1 : 1));
+    }
+    return [
+      LineChartBarData(
+        spots: previousMonthSpots,
+        curveSmoothness: .33,
+        isCurved: true,
+        color :HexColor.darken(AppTheme.appTheme.grandientColorEnd(), darken),
+        barWidth: 2,
+        isStrokeCapRound: true,
+        preventCurveOverShooting: true,
+        dotData: FlDotData(
+          show: false,
+        ),
+        belowBarData: BarAreaData(
+          show: false,
+        ),
+      ),
+      LineChartBarData(
+        spots: currentMonthSpots,
+        curveSmoothness: .33,
+        isCurved: true,
+        color:Colors.white,
+        barWidth: 2,
+        preventCurveOverShooting: true,
+        isStrokeCapRound: true,
+        dotData: FlDotData(
+            show: true,
+            getDotPainter: (FlSpot spot, double xPercentage, LineChartBarData bar, int index) {
+              return FlDotCirclePainter(
+                  radius: 2,
+                  color: bar.color?.value == Colors.white.value
+                      ? bar.color!
+                      : Colors.transparent,
+                  strokeColor: bar.color?.value == Colors.white.value
+                      ? Colors.black12
+                      : Colors.transparent,
+                  strokeWidth: 0);
+            }),
+        belowBarData: BarAreaData(
+          show: false,
+        ),
+      ),
+    ];
+  }
 
   String getMonthByIndex(int index) {
     DateTime currentMonthFirstDay = DateUtil.getMonthStartAndEnd(_now, currentMonthIndex).x0;
