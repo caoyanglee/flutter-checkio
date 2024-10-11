@@ -22,8 +22,7 @@ class AllHabitScreen extends StatefulWidget {
 class _AllHabitScreenState extends State<AllHabitScreen> {
   @override
   Widget build(BuildContext context) {
-    SystemUtil.changeStateBarMode(
-        AppTheme.appTheme.isDark() ? Brightness.light : Brightness.dark);
+    SystemUtil.changeStateBarMode(AppTheme.appTheme.isDark() ? Brightness.light : Brightness.dark);
     return Stack(
       children: [
         ClipPath(
@@ -51,15 +50,12 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
                     Text(
                       '所有习惯',
                       style: AppTheme.appTheme.headline1(
-                          textColor: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
+                          textColor: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Expanded(child: SizedBox()),
                     InkWell(
                       onTap: () {
-                        Navigator.of(context)
-                            .push(CupertinoPageRoute(builder: (context) {
+                        Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
                           return HabitEditPage(
                             isModify: false,
                             habit: null,
@@ -105,17 +101,18 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
+                            alignment: Alignment.topLeft,
                             margin: EdgeInsets.only(left: 16, right: 16),
                             child: TabBar(
                               tabs: tabs
                                   .map((time) => Container(
-                                        alignment: Alignment.center,
-                                        width: 60,
-                                        height: 38,
-                                        child: Text(
-                                            '${CompleteTime.getTime(time.time)}'),
-                                      ))
+                                alignment: Alignment.center,
+                                width: 60,
+                                height: 38,
+                                child: Text('${CompleteTime.getTime(time.time)}'),
+                              ))
                                   .toList(),
+                              tabAlignment: TabAlignment.start,
                               labelColor: Colors.white,
                               labelStyle: AppTheme.appTheme.headline1(
                                   textColor: Colors.white,
@@ -126,20 +123,19 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
                                   textColor: Colors.white70,
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16),
-                              indicator: BorderTabIndicator(
-                                  indicatorHeight: 36, textScaleFactor: 0.8),
+                              dividerHeight: 0,
+                              indicator:
+                              BorderTabIndicator(indicatorHeight: 36, textScaleFactor: 5),
                               isScrollable: true,
                             ),
                           ),
-                          SizedBox(
-                            height: 3,
-                          ),
+                          SizedBox(height: 3),
                           Expanded(
                             child: TabBarView(
                               children: tabs
                                   .map((time) => AllHabitListView(
-                                        habits: filterHabits(habits, time.time),
-                                      ))
+                                habits: filterHabits(habits, time.time),
+                              ))
                                   .toList(),
                             ),
                           )
@@ -174,8 +170,6 @@ class _AllHabitScreenState extends State<AllHabitScreen> {
     if (complete == -1) {
       return List.from(habits);
     }
-    return List<Habit>.from(habits)
-        .where((habit) => habit.completeTime == complete)
-        .toList();
+    return List<Habit>.from(habits).where((habit) => habit.completeTime == complete).toList();
   }
 }

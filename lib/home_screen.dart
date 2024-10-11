@@ -6,6 +6,7 @@ import 'package:timefly/one_day/one_day_screen.dart';
 import 'package:timefly/widget/appbar/fluid_nav_bar.dart';
 
 import 'all_habits/all_habits_screen_2.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -43,16 +44,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     setState(() {
       switch (index) {
         case 0:
-          _child = OneDayScreen();
+          _child = OneDayScreen(); //首页
           break;
         case 1:
-          _child = AllHabitScreen();
+          _child = AllHabitScreen(); //所有习惯
           break;
         case 2:
-          _child = HabitProgressScreen();
+          _child = HabitProgressScreen(); //统计
           break;
         case 3:
-          _child = MineScreen();
+          _child = MineScreen(); //我的
           break;
       }
       _child = AnimatedSwitcher(
