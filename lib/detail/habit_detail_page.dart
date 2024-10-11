@@ -22,16 +22,14 @@ class HabitDetailPage extends StatefulWidget {
   _HabitDetailPageState createState() => _HabitDetailPageState();
 }
 
-class _HabitDetailPageState extends State<HabitDetailPage>
-    with SingleTickerProviderStateMixin {
+class _HabitDetailPageState extends State<HabitDetailPage> with SingleTickerProviderStateMixin {
   late ScrollController _controller;
   late AnimationController _animationController;
 
   @override
   void initState() {
     _controller = ScrollController();
-    _animationController = AnimationController(
-        duration: Duration(milliseconds: 1000), vsync: this);
+    _animationController = AnimationController(duration: Duration(milliseconds: 1000), vsync: this);
     Future.delayed(Duration(milliseconds: 300), () {
       _animationController.forward();
     });
@@ -56,8 +54,7 @@ class _HabitDetailPageState extends State<HabitDetailPage>
             return CircularProgressIndicator();
           }
           if (state is HabitLoadSuccess) {
-            final Habit habit = state.habits
-                .firstWhere((element) => element.id == widget.habitId);
+            final Habit habit = state.habits.firstWhere((element) => element.id == widget.habitId);
             return _body(habit);
           }
           return Container();
@@ -83,22 +80,25 @@ class _HabitDetailPageState extends State<HabitDetailPage>
             ? AppTheme.appTheme.cardBackgroundColor()
             : Color(habit.mainColor).withOpacity(0.8),
         actions: [
-          IconButton(
-            iconSize: 33,
-            padding: EdgeInsets.all(16),
-            icon: SvgPicture.asset(
-              'assets/images/bianji.svg',
-              color: Colors.white,
+          Container(
+            width: 48,
+            height: 48,
+            child: IconButton(
+              iconSize: 48,
+              padding: EdgeInsets.all(16),
+              icon: SvgPicture.asset(
+                'assets/images/bianji.svg',
+                color: Colors.white,
+              ),
+              onPressed: () async {
+                await Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
+                  return HabitEditPage(
+                    isModify: true,
+                    habit: habit,
+                  );
+                }));
+              },
             ),
-            onPressed: () async {
-              await Navigator.of(context)
-                  .push(CupertinoPageRoute(builder: (context) {
-                return HabitEditPage(
-                  isModify: true,
-                  habit: habit,
-                );
-              }));
-            },
           ),
         ],
         title: Row(
@@ -110,8 +110,7 @@ class _HabitDetailPageState extends State<HabitDetailPage>
               width: 34,
               height: 34,
               decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 1)),
+                  shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 1)),
               child: Image.asset(habit.iconPath),
             ),
             SizedBox(
@@ -119,10 +118,8 @@ class _HabitDetailPageState extends State<HabitDetailPage>
             ),
             Text(
               habit.name,
-              style: AppTheme.appTheme.textStyle(
-                  textColor: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
+              style: AppTheme.appTheme
+                  .textStyle(textColor: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
             )
           ],
         ),
