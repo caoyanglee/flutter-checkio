@@ -13,6 +13,7 @@ import 'package:timefly/utils/pair.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:time/time.dart';
 
+///习惯检查  时间轴
 class HabitCheckView extends StatefulWidget {
   ///首页签到进入，start 和 end 是一个周期，而详情进入是某一天，需要单独判断
   final bool isFromDetail;
@@ -167,19 +168,30 @@ class _HabitCheckViewState extends State<HabitCheckView> with SingleTickerProvid
             padding: EdgeInsets.only(top: 10, bottom: 20, left: 28),
             child: Slidable(
               key: GlobalKey(),
-              controller: slidableController,
-              startActionPane: ActionPane(
+              // controller: slidableController,
+              endActionPane: ActionPane(
+                extentRatio: 0.3,
                 // A motion is a widget used to control how the pane animates.
                 motion: const ScrollMotion(),
-
                 // A pane can dismiss the Slidable.
-                dismissible: DismissiblePane(onDismissed: () {}),
+                // dismissible: DismissiblePane(onDismissed: () {}),
                 children: [
+                  // SlidableAction(
+                  //   onPressed: (context){
+                  //     removeItem(context, record);
+                  //   },
+                  //   backgroundColor: Colors.redAccent.withOpacity(0.35),
+                  //   foregroundColor: Colors.white,
+                  //   icon: Icons.delete_outline,
+                  //   label: 'Delete',
+                  // ),
+
                   GestureDetector(
                     onTap: () async {
                       removeItem(context, record);
                     },
                     child: Container(
+                      padding: EdgeInsets.only(left: 24),
                       alignment: Alignment.center,
                       child: Container(
                         alignment: Alignment.center,
