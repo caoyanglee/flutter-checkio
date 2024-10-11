@@ -41,7 +41,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.weimu.duriandiary"
+        applicationId "com.weimu.durianhabit"
 //        minSdkVersion flutter.minSdkVersion
         minSdkVersion 24
         targetSdkVersion flutter.targetSdkVersion

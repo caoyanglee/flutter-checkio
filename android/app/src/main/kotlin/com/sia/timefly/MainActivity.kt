@@ -1,4 +1,4 @@
-package com.sia.timefly
+package com.weimu.durianhabit
 
 import io.flutter.embedding.android.FlutterActivity
 
