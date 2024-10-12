@@ -30,7 +30,7 @@ class DatabaseProvider {
     String dbPath = await getDatabasesPath();
 
     return await openDatabase(
-      join(dbPath, 'habitDB.db'),
+      join(dbPath, 'app_database.db'),
       version: 1,
       onConfigure: (Database database) async {
         if (Platform.isAndroid) {
