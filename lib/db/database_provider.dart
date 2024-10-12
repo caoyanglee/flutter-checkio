@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:timefly/models/habit.dart';
@@ -29,6 +32,17 @@ class DatabaseProvider {
     return await openDatabase(
       join(dbPath, 'habitDB.db'),
       version: 1,
+      onConfigure: (Database database) async {
+        if (Platform.isAndroid) {
+          DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+          final androidInfo = await deviceInfo.androidInfo;
+          final sdkInt = androidInfo.version.sdkInt;
+          if (sdkInt == 28) {
+            //Android9.0默认使用wal模式，会导致无法与其他设备，所以主动设置为TRUNCATE
+            await database.rawQuery("PRAGMA journal_mode=TRUNCATE;");
+          }
+        }
+      },
       onCreate: (Database database, int version) async {
         print("Creating habit table");
         await database.execute(
